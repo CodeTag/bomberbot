@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+	<title>Bomberbot challenge </title>
+
+	<script>
+		window.onload= function(){
+			var tablero = document.getElementById("tablero");
+			var mapa = 	"XXXXXXXXXXXXX\n"+
+						"X__LL_L_LL__X\n"+
+						"X_XLX_X_XLX_X\n"+
+						"XLL_LLLLL_LLX\n"+
+						"XLXLXLXLXLXLX\n"+
+						"X__LLL_LLL__X\n"+
+						"XLXLX_X_X_XLX\n"+
+						"X__LLL_LLL__X\n"+
+						"XLXLXLXLXLXLX\n"+
+						"XLL_LLLLL_LLX\n"+
+						"X_XLX_X_XLX_X\n"+
+						"X__LL_L_LL__X\n"+
+						"XXXXXXXXXXXXX\n";
+			if(tablero.getContext) {
+				var ctx = tablero.getContext('2d');
+				var bloque = new Image();
+				bloque.src = "img/SolidoBloque.png";
+				var ladrillo = new Image();
+				ladrillo.src = "img/LadrilloBloque.png";
+			}
+			(function(){
+				var i=0;
+				var j=0;
+				var cont=0;
+				console.log("algo "+mapa);
+				while(cont<mapa.length){
+					switch(mapa[cont]){
+						case 'X':
+							ctx.drawImage(bloque, 10+i*50,10+j*50,50,50);
+							i++;
+						break;
+						case 'L':
+							ctx.drawImage(ladrillo, 10+i*50,10+j*50,50,50);
+							i++;
+						break;
+						case '_':
+							i++;
+						break;
+						case '\n':
+							j++;
+							i=0;
+						break;
+					}
+					cont++;
+				}
+			})();
+		}
+	</script>
+
+</head>
+
+<body>
+
+	<canvas id="tablero" width="700px" height="700px" style="background-color:#000;">
+		<p>what the fuck browser are you using??</p>
+	</canvas>
+
+</body>
+
+
+
+</html>
