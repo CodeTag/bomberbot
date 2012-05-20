@@ -27,6 +27,7 @@
 				var ladrillo = new Image();
 				ladrillo.src = "img/LadrilloBloque.png";
 			}
+			var size=48;
 			(function(){
 				var i=0;
 				var j=0;
@@ -35,11 +36,11 @@
 				while(cont<mapa.length){
 					switch(mapa[cont]){
 						case 'X':
-							ctx.drawImage(bloque, 10+i*50,10+j*50,50,50);
+							ctx.drawImage(bloque, 10+i*size,10+j*size,size,size);
 							i++;
 						break;
 						case 'L':
-							ctx.drawImage(ladrillo, 10+i*50,10+j*50,50,50);
+							ctx.drawImage(ladrillo, 10+i*size,10+j*size,size,size);
 							i++;
 						break;
 						case '_':
