@@ -23,12 +23,27 @@
 			if(tablero.getContext) {
 				var ctx = tablero.getContext('2d');
 				var bloque = new Image();
-				bloque.src = "img/SolidoBloque.png";
+				bloque.src = "img/SolidoBloque50.png";
 				var ladrillo = new Image();
-				ladrillo.src = "img/LadrilloBloque.png";
+				ladrillo.src = "img/LadrilloBloque50.png";
+				
+				var botYellow = new Image();
+				botYellow.src = "img/bots/RCuadAmarillo.png";
+				
+				var botWhite = new Image();
+				botWhite.src = "img/bots/RCuadBlanco.png";
+				
+				var botMagenta = new Image();
+				botMagenta.src = "img/bots/RCuadFucsia.png";
+				
+				var botRed = new Image();
+				botRed.src = "img/bots/RCuadRojo.png";
+				
+				var botGreen = new Image();
+				botGreen.src = "img/bots/RCuadVerde.png";
 			}
-			var size=48;
-			(function(){
+			var size=50;
+			var fondo = function(){
 				var i=0;
 				var j=0;
 				var cont=0;
@@ -53,7 +68,40 @@
 					}
 					cont++;
 				}
-			})();
+			};
+			var xYellow=3;
+			var yYellow=3;
+			var pintar = function(){
+				//ctx.drawImage(botYellow, 10+size*xYellow,10-size*0.65+size*yYellow,size,size*1.5);
+				//ctx.drawImage(botGreen, 10+size*9,10-size*0.65+size*3,size,size*1.5);
+				//ctx.drawImage(botMagenta, 10+size*3,10-size*0.65+size*9,size,size*1.5);
+				ctx.drawImage(botRed, 10+size*6,10-size*0.65+size*7,size,size*1.5);
+				//ctx.drawImage(botWhite, 10+size*9,10-size*0.65+size*9,size,size*1.5);
+			};
+			setInterval(function(){
+				ctx.beginPath();
+		
+				ctx.rect(0, 0, size*14, size*14);
+				ctx.fill();
+				
+				fondo();
+				pintar();
+				
+				if(xYellow>9){
+					
+					if(yYellow<=9){
+						yYellow+=0.05;
+					}
+				}else{
+					xYellow+=0.05;
+				}
+				ctx.drawImage(botYellow, 10+size*xYellow,10-size*0.65+size*yYellow,size,size*1.5);
+				ctx.drawImage(botGreen, 10+size*(12-yYellow),10-size*0.65+size*xYellow,size,size*1.5);
+				ctx.drawImage(botMagenta, 10+size*yYellow,10-size*0.65+size*(12-xYellow),size,size*1.5);
+				ctx.drawImage(botWhite, 10+size*(12-xYellow),10-size*0.65+size*(12-yYellow),size,size*1.5);
+				ctx.stroke();
+			},
+			50);
 		}
 	</script>
 
