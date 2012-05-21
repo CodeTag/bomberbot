@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+	<title>Bomberbot challenge </title>
+	<script>
+		var tipos= ['c','d','r','t'];
+		var colores= ['a','b','f','m','n','r','v'];
+		var tipoSel= 0;
+		var colorSel= 0;
+		var ctx= undefined;
+		var size=50;
+		var bot = new Image();
+		
+		
+		var pintar = function(){
+			
+			ctx.beginPath();
+			ctx.rect(350-size/2,250-size*3/4,size,size*1.5);
+			ctx.fill();
+			ctx.stroke();
+		}
+		
+		window.onload= function(){
+			var tablero = document.getElementById("tablero");
+		
+			if(tablero.getContext) {
+				ctx = tablero.getContext('2d');
+				bot.onload = function() {
+					ctx.drawImage(bot, 350-size/2,250-size*3/4,size,size*1.5);
+		    	};	
+			}
+			bot.src = "img/bots/r"+tipos[tipoSel]+colores[colorSel]+".png";
+		}
+		
+		
+		var cambiarCabeza = function(atras){
+			if(atras){
+				tipoSel--;
+				if(tipoSel<0){
+					tipoSel=tipos.length-1;
+				}
+			}else{
+				tipoSel++;
+				if(tipoSel==tipos.length){
+					tipoSel=0;
+				}
+			}
+			bot.src = "img/bots/r"+tipos[tipoSel]+colores[colorSel]+".png";
+			
+			pintar();
+		}
+		
+		var cambiarColor = function(atras){
+			if(atras){
+				colorSel--;
+				if(colorSel<0){
+					colorSel=colores.length-1;
+				}
+			}else{
+				colorSel++;
+				if(colorSel==colores.length){
+					colorSel=0;
+				}
+			}
+			bot.src = "img/bots/r"+tipos[tipoSel]+colores[colorSel]+".png";
+			
+			pintar();
+		}
+	</script>
+
+</head>
+<body>
+	<canvas id="tablero" width="700px" height="500px" style="background-color:#000;" style="float:left">
+		<p>what the fuck browser are you using??</p>
+	</canvas>
+	<div id="selectors" style="float:right">
+		<button onclick="cambiarCabeza(true)">&lt;</button>Cabeza<button onclick="cambiarCabeza(false)">&gt;</button>
+		<button onclick="cambiarColor(true)">&lt;</button>Color<button onclick="cambiarColor(false)">&gt;</button>
+	</div>
+</body>
+
+</html>
