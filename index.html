@@ -5,18 +5,28 @@
 	<title>Bomberbot challenge </title>
 
 	<script>
+		var tipos= ['c','d','r','t'];
+		var colores= ['a','b','f','m','n','r','v'];
+		
+		var crearRandomRobot = function(){
+			var tipoSel = Math.round(Math.random()*(tipos.length-1));
+			var colorSel = Math.round(Math.random()*(colores.length-1));
+			console.log(tipoSel);
+			console.log(colorSel);
+			return tipos[tipoSel]+""+colores[colorSel];
+		}
 		window.onload= function(){
 			var tablero = document.getElementById("tablero");
 			var mapa = 	"XXXXXXXXXXXXX\n"+
 						"X__LL_L_LL__X\n"+
 						"X_XLX_X_XLX_X\n"+
-						"XLL_LLLLL_LLX\n"+
-						"XLXLXLXLXLXLX\n"+
-						"X__LLL_LLL__X\n"+
-						"XLXLX_X_X_XLX\n"+
-						"X__LLL_LLL__X\n"+
-						"XLXLXLXLXLXLX\n"+
-						"XLL_LLLLL_LLX\n"+
+						"XLL_______LLX\n"+
+						"XLX_XLXLX_XLX\n"+
+						"X___LLLLL___X\n"+
+						"XLX_XLXLX_XLX\n"+
+						"X___LLLLL___X\n"+
+						"XLX_XLXLX_XLX\n"+
+						"XLL_______LLX\n"+
 						"X_XLX_X_XLX_X\n"+
 						"X__LL_L_LL__X\n"+
 						"XXXXXXXXXXXXX\n";
@@ -27,27 +37,30 @@
 				var ladrillo = new Image();
 				ladrillo.src = "img/LadrilloBloque50.png";
 				
-				var botYellow = new Image();
-				botYellow.src = "img/bots/RCuadAmarillo.png";
+				var bot1 = new Image();
+				bot1.onload = function(){ctx.drawImage(bot1,0,0,size, size);};
+				bot1.src = "img/bots/r"+crearRandomRobot()+".png";
 				
-				var botWhite = new Image();
-				botWhite.src = "img/bots/RCuadBlanco.png";
+				var bot2 = new Image();
+				bot2.onload = function(){ctx.drawImage(bot2,0,0,size, size);};
+				bot2.src = "img/bots/r"+crearRandomRobot()+".png";
 				
-				var botMagenta = new Image();
-				botMagenta.src = "img/bots/RCuadFucsia.png";
+				var bot3 = new Image();
+				bot3.onload = function(){ctx.drawImage(bot3,0,0,size, size);};
+				bot3.src = "img/bots/r"+crearRandomRobot()+".png";
 				
-				var botRed = new Image();
-				botRed.src = "img/bots/RCuadRojo.png";
-				
-				var botGreen = new Image();
-				botGreen.src = "img/bots/RCuadVerde.png";
+				var bot4 = new Image();
+				bot4.onload = function(){ctx.drawImage(bot4,0,0,size, size);};
+				bot4.src = "img/bots/r"+crearRandomRobot()+".png";
 			}
 			var size=50;
 			var fondo = function(){
 				var i=0;
 				var j=0;
 				var cont=0;
-				console.log("algo "+mapa);
+				ctx.beginPath();
+				ctx.rect(0, 0, size*14, size*14);
+				ctx.fill();
 				while(cont<mapa.length){
 					switch(mapa[cont]){
 						case 'X':
@@ -68,38 +81,30 @@
 					}
 					cont++;
 				}
+				ctx.stroke();
 			};
 			var xYellow=3;
 			var yYellow=3;
 			var pintar = function(){
-				//ctx.drawImage(botYellow, 10+size*xYellow,10-size*0.65+size*yYellow,size,size*1.5);
-				//ctx.drawImage(botGreen, 10+size*9,10-size*0.65+size*3,size,size*1.5);
-				//ctx.drawImage(botMagenta, 10+size*3,10-size*0.65+size*9,size,size*1.5);
-				ctx.drawImage(botRed, 10+size*6,10-size*0.65+size*7,size,size*1.5);
-				//ctx.drawImage(botWhite, 10+size*9,10-size*0.65+size*9,size,size*1.5);
+				ctx.beginPath();				
+				ctx.drawImage(bot1, 10+size*xYellow,10-size*0.65+size*yYellow,size,size*1.5);
+				ctx.drawImage(bot4, 10+size*(12-yYellow),10-size*0.65+size*xYellow,size,size*1.5);
+				ctx.drawImage(bot3, 10+size*yYellow,10-size*0.65+size*(12-xYellow),size,size*1.5);
+				ctx.drawImage(bot2, 10+size*(12-xYellow),10-size*0.65+size*(12-yYellow),size,size*1.5);
+				ctx.stroke();
+				
 			};
 			setInterval(function(){
-				ctx.beginPath();
-		
-				ctx.rect(0, 0, size*14, size*14);
-				ctx.fill();
-				
-				fondo();
-				pintar();
-				
+
 				if(xYellow>9){
-					
 					if(yYellow<=9){
 						yYellow+=0.05;
 					}
 				}else{
 					xYellow+=0.05;
 				}
-				ctx.drawImage(botYellow, 10+size*xYellow,10-size*0.65+size*yYellow,size,size*1.5);
-				ctx.drawImage(botGreen, 10+size*(12-yYellow),10-size*0.65+size*xYellow,size,size*1.5);
-				ctx.drawImage(botMagenta, 10+size*yYellow,10-size*0.65+size*(12-xYellow),size,size*1.5);
-				ctx.drawImage(botWhite, 10+size*(12-xYellow),10-size*0.65+size*(12-yYellow),size,size*1.5);
-				ctx.stroke();
+				fondo();
+				pintar();
 			},
 			50);
 		}
