@@ -5,7 +5,7 @@
 	<title>Bomberbot challenge </title>
 	<style>
 		body{
-			background-color:#000;
+			background-color:#004;
 		}
 	</style>
 	<script>
@@ -27,10 +27,12 @@
 			return tipos[tipoSel]+""+colores[colorSel];
 		};
 		
-		var Bot = function(tipoRobot, xIndex, yIndex){
+		var Bot = function(nombre, tipoRobot, xIndex, yIndex){
+			this.nombre = nombre;
 			this.sprite = new Image();
 			this.xIndex=xIndex;
 			this.yIndex=yIndex;
+			this.accion= "";
 			
 			this.sprite.onload = function(){};
 			this.sprite.src = "img/bots/r"+tipoRobot+".png";
@@ -39,14 +41,31 @@
 				ctx.drawImage(this.sprite, 10+size*xIndex,10-size*0.65+size*yIndex,size,size*1.5);
 			};
 			
-			this.accion= "";
+			this.getX= function(){
+				return xIndex;
+			}
+			this.getY= function(){
+				return yIndex;
+			}
+			this.getAccion = function(){
+				switch(this.accion){
+					case "N":
+					return "\u2191";
+					case "O":
+					return "\u2192";
+					case "S":
+					return "\u2193";
+					case "E":
+					return "\u2190";
+				}
+				return "";
+			};
 			this.ejecutarAccion = function(accion){
 				this.accion = accion[0];
 				xIndex= Math.round(xIndex);
 				yIndex= Math.round(yIndex);
 				if(this.accion=='N'&&yIndex<=2){
 					this.accion="";
-					console.log("aaa");
 				}
 				else if(this.accion=='S'&&yIndex>=10){
 					this.accion="";
@@ -58,7 +77,7 @@
 					this.accion="";
 				}
 				
-			}
+			};
 			this.mover = function(){
 				switch(this.accion){
 					case 'N':
@@ -86,7 +105,6 @@
 						}
 					break;
 				}
-				
 			};
 		};
 		
@@ -107,15 +125,16 @@
 						"XXXXXXXXXXXXX\n";
 			if(tablero.getContext) {
 				ctx = tablero.getContext('2d');
+				ctx.font = '18px Calibri';
 				var bloque = new Image();
 				bloque.src = "img/SolidoBloque50.png";
 				var ladrillo = new Image();
 				ladrillo.src = "img/LadrilloBloque50.png";
 				
-				var bot1 = new Bot(crearRandomRobot(),7,7);
-				var bot2 = new Bot(crearRandomRobot(),5,7);
-				var bot3 = new Bot(crearRandomRobot(),5,5);
-				var bot4 = new Bot(crearRandomRobot(),7,5);
+				var bot1 = new Bot("bot1",crearRandomRobot(),7,7);
+				var bot2 = new Bot("bot2",crearRandomRobot(),5,7);
+				var bot3 = new Bot("bot3",crearRandomRobot(),5,5);
+				var bot4 = new Bot("bot4",crearRandomRobot(),7,5);
 			}
 			
 			var fondo = function(){
@@ -123,7 +142,8 @@
 				var j=0;
 				var cont=0;
 				ctx.beginPath();
-				ctx.rect(0, 0, size*14, size*14);
+				ctx.fillStyle="#000";
+				ctx.rect(0, 0, 700, 700);
 				ctx.fill();
 				while(cont<mapa.length){
 					switch(mapa[cont]){
@@ -150,15 +170,37 @@
 					cont++;
 				}
 				
-				ctx.fillText("turno "+turno,50,50);
 				ctx.stroke();
 			};
-			var xYellow=3;
-			var yYellow=3;
+			var pintarStatus = function(){
+				ctx.beginPath();
+				ctx.fillStyle="#000";
+				ctx.rect(700, 0, 150, 700);
+				ctx.fill();
+				ctx.fillStyle="#FFF";
+				ctx.fillText("Turno "+turno,750,50);
+				
+				
+				ctx.drawImage(bot1.sprite,750,70,20,30);
+				ctx.fillText(bot1.nombre,710,85);
+				ctx.fillText(bot1.getAccion(),800,85);
+				
+				ctx.drawImage(bot2.sprite,750,120,20,30);
+				ctx.fillText(bot2.nombre,710,135);
+				ctx.fillText(bot2.getAccion(),800,135);
+				
+				ctx.drawImage(bot3.sprite,750,170,20,30);
+				ctx.fillText(bot3.nombre,710,185);
+				ctx.fillText(bot3.getAccion(),800,185);
+				
+				ctx.drawImage(bot4.sprite,750,220,20,30);
+				ctx.fillText(bot4.nombre,710,220);
+				ctx.fillText(bot4.getAccion(),800,235); 
+				ctx.stroke();
+			}
 			
 			var pintar = function(){
-				ctx.beginPath();				
-				//ctx.drawImage(bot1, 10+size*xYellow,10-size*0.65+size*yYellow,size,size*1.5);
+				ctx.beginPath();
 				bot1.pintar();
 				bot2.pintar();
 				bot3.pintar();
@@ -173,27 +215,6 @@
 			var cont=0;
 			var direccion="o";
 			var moverBots= function(){
-				if(direccion=="o"){
-					xYellow+=factorMovbots;
-					if(xYellow>=9){
-						direccion="s";	
-					}
-				}else if(direccion=="s"){
-					yYellow+=factorMovbots;
-					if(yYellow>=9){
-						direccion="e";	
-					}
-				}else if(direccion=="e"){
-					xYellow-=factorMovbots;
-					if(xYellow<=3){
-						direccion="n";	
-					}
-				}else if(direccion=="n"){
-					yYellow-=factorMovbots;
-					if(yYellow<=3){
-						direccion="o";	
-					}
-				}
 				
 				bot1.mover();
 				bot2.mover();
@@ -221,7 +242,7 @@
     		};
     		
     		
-    		var movs = ["N","E","S"," ","O"];
+    		var movs = ["N","E","S","P","O"];
     		
     		(function animloop(){
 				requestAnimFrame(animloop);
@@ -239,7 +260,7 @@
     				bot3.ejecutarAccion(movs[tipoMov3]);
     				bot4.ejecutarAccion(movs[tipoMov4]);
     				MOVF=tempVelocidad;
-    				
+    				pintarStatus();
 				}
 			})();
 			
@@ -250,7 +271,7 @@
 
 <body>
 	
-	<canvas id="tablero" width="700px" height="700px" style="background-color:#000;" style="float:left;">
+	<canvas id="tablero" width="850px" height="700px" style="background-color:#000;" style="float:left;">
 		<p>what the fuck browser are you using??</p>
 	</canvas>
 	<div style="float:right;color:#FFF;">
