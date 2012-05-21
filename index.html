@@ -13,7 +13,13 @@
 		var colores= ['a','b','f','m','n','r','v'];
 		var ctx=undefined;
 		var size=50;
+		var MOVF=30;
+		var turno=0;
 		
+		var tempVelocidad=MOVF;
+		var cambiarVelocidad= function(velocidad){
+			tempVelocidad = velocidad;
+		}
 		
 		var crearRandomRobot = function(){
 			var tipoSel = Math.round(Math.random()*(tipos.length-1));
@@ -36,10 +42,8 @@
 			this.accion= "";
 			this.ejecutarAccion = function(accion){
 				this.accion = accion[0];
-				
-				if(this.accion=='N'){
-					console.log(yIndex);	
-				}
+				xIndex= Math.round(xIndex);
+				yIndex= Math.round(yIndex);
 				if(this.accion=='N'&&yIndex<=2){
 					this.accion="";
 					console.log("aaa");
@@ -58,26 +62,26 @@
 			this.mover = function(){
 				switch(this.accion){
 					case 'N':
-						yIndex-=1/30;
-						if(yIndex%30){
+						yIndex-=1/MOVF;
+						if(yIndex%MOVF){
 							accion="";
 						}
 					break;
 					case 'O':
-						xIndex+=1/30;
-						if(xIndex%30){
+						xIndex+=1/MOVF;
+						if(xIndex%MOVF){
 							accion="";
 						}
 					break;
 					case 'E':
-						xIndex-=1/30;
-						if(xIndex%30){
+						xIndex-=1/MOVF;
+						if(xIndex%MOVF){
 							accion="";
 						}
 					break;
 					case 'S':
-						yIndex+=1/30;
-						if(yIndex%30){
+						yIndex+=1/MOVF;
+						if(yIndex%MOVF){
 							accion="";							
 						}
 					break;
@@ -145,6 +149,8 @@
 					}
 					cont++;
 				}
+				
+				ctx.fillText("turno "+turno,50,50);
 				ctx.stroke();
 			};
 			var xYellow=3;
@@ -161,8 +167,9 @@
 				ctx.stroke();
 			};
 			
-			var factorMovbots=1/30;
-			var time=0;
+			
+			var factorMovbots=1/MOVF;
+			
 			var cont=0;
 			var direccion="o";
 			var moverBots= function(){
@@ -219,16 +226,20 @@
     		(function animloop(){
 				requestAnimFrame(animloop);
 				moverBots();
-				if(cont%30==0){
+				if(cont%MOVF==0){
+					turno++;
+					
     				leerMapa();
-    				var tipoMov1 = Math.round(Math.random()*(movs.length-1));
-    				var tipoMov2 = Math.round(Math.random()*(movs.length-1));
-    				var tipoMov3 = Math.round(Math.random()*(movs.length-1));
-    				var tipoMov4 = Math.round(Math.random()*(movs.length-1));
+    				var tipoMov1 = Math.floor(Math.random()*(movs.length));
+    				var tipoMov2 = Math.floor(Math.random()*(movs.length));
+    				var tipoMov3 = Math.floor(Math.random()*(movs.length));
+    				var tipoMov4 = Math.floor(Math.random()*(movs.length));
     				bot1.ejecutarAccion(movs[tipoMov1]);
     				bot2.ejecutarAccion(movs[tipoMov2]);
     				bot3.ejecutarAccion(movs[tipoMov3]);
     				bot4.ejecutarAccion(movs[tipoMov4]);
+    				MOVF=tempVelocidad;
+    				
 				}
 			})();
 			
@@ -238,10 +249,14 @@
 </head>
 
 <body>
-
-	<canvas id="tablero" width="700px" height="700px" style="background-color:#000;">
+	
+	<canvas id="tablero" width="700px" height="700px" style="background-color:#000;" style="float:left;">
 		<p>what the fuck browser are you using??</p>
 	</canvas>
+	<div style="float:right;color:#FFF;">
+		<label for ="velocidad">velocidad</label>
+		<input id="velocidad" type="range"  min="2" max="48" value="20" onchange="cambiarVelocidad(50-this.value)"/>
+	<div style="float:right;">
 
 </body>
 
