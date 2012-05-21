@@ -3,7 +3,11 @@
 <html>
 <head>
 	<title>Bomberbot challenge </title>
-
+	<style>
+		body{
+			background-color:#000;
+		}
+	</style>
 	<script>
 		var tipos= ['c','d','r','t'];
 		var colores= ['a','b','f','m','n','r','v'];
@@ -11,8 +15,6 @@
 		var crearRandomRobot = function(){
 			var tipoSel = Math.round(Math.random()*(tipos.length-1));
 			var colorSel = Math.round(Math.random()*(colores.length-1));
-			console.log(tipoSel);
-			console.log(colorSel);
 			return tipos[tipoSel]+""+colores[colorSel];
 		}
 		window.onload= function(){
@@ -94,19 +96,52 @@
 				ctx.stroke();
 				
 			};
-			setInterval(function(){
-
-				if(xYellow>9){
-					if(yYellow<=9){
-						yYellow+=0.05;
+			
+			var factorMovbots=1/30;
+			var direccion="o";
+			var moverBots= function(){
+				if(direccion=="o"){
+					xYellow+=factorMovbots;
+					if(xYellow>=9){
+						direccion="s";	
 					}
-				}else{
-					xYellow+=0.05;
+				}else if(direccion=="s"){
+					yYellow+=factorMovbots;
+					if(yYellow>=9){
+						direccion="e";	
+					}
+				}else if(direccion=="e"){
+					xYellow-=factorMovbots;
+					if(xYellow<=3){
+						direccion="n";	
+					}
+				}else if(direccion=="n"){
+					yYellow-=factorMovbots;
+					if(yYellow<=3){
+						direccion="o";	
+					}
 				}
+				
 				fondo();
 				pintar();
-			},
-			50);
+			};
+			
+		    window.requestAnimFrame = (function(){
+    			return  window.requestAnimationFrame || 
+            	window.webkitRequestAnimationFrame || 
+              	window.mozRequestAnimationFrame    || 
+              	window.oRequestAnimationFrame      || 
+              	window.msRequestAnimationFrame     || 
+              	function( callback ){
+                	window.setTimeout(callback, 1000 / 60);
+              	};
+    		})();
+    		
+    		(function animloop(){
+				requestAnimFrame(animloop);
+				moverBots();
+			})();
+			
 		}
 	</script>
 
