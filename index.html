@@ -47,8 +47,14 @@
 			this.setX= function(i){
 				xIndex = i;
 			};
+			this.getX= function(){
+				return Math.round(xIndex);
+			};
 			this.setY= function(j){
 				yIndex = j;
+			};
+			this.getY= function(){
+				return Math.round(yIndex);
 			};
 			this.setVivo= function(vivo){
 				this.vivo=vivo;
@@ -144,7 +150,10 @@
 			};
 		};
 		
-		var mapaSource="XXXXX\nXA_BX\nX___X\nXLLLX\nX_3_X\nXC_DX\nXXXXX\n-XXXXX\nXA__X\nX__BX\nXLL_X\nX_2DX\nXC__X\nXXXXX\n-XXXXX\nX3_BX\nXA__X\nX_L_X\nX_1_X\nXC_DX\nXXXXX\n-XXXXX\nX2B_X\nX___X\nXA__X\nX___X\nXCD_X\nXXXXX\n-XXXXX\nX1B_X\nX___X\nXA__X\nX___X\nXC_DX\nXXXXX\n-XXXXX\nX__BX\nX___X\nXA__X\nX__DX\nXC__X\nXXXXX\n-XXXXX\nX__BX\nX___X\nXA__X\nX_D3X\nX_C_X\nXXXXX\n-XXXXX\nX__BX\nX___X\nXA__X\nX_D2X\nX__CX\nXXXXX\n-XXXXX\nX__BX\nX___X\nXAD_X\nX__1X\nX___X\nXXXXX\n-XXXXX\nX__BX\nX_D_X\nXA__X\nX___X\nX___X\nXXXXX\n-XXXXX\nX__BX\nXD__X\nXA__X\nX___X\nX___X\nXXXXX\n";
+		var mapaSource="XXXXX\nXA_BX\nX___X\nXLLLX\nX_3_X\nXC_DX\nXXXXX-XXXXX\nXA__X\nX__BX\nXLL_X\nX_2DX\nXC__X\nXXXXX-XXXXX\nX3_BX\nXA__X\nX_L_X\nX_1_X\nXC_DX\nXXXXX-XXXXX\nX2B_X\nX___X\nXA__X\nX___X\nXCD_X\nXXXXX-XXXXX\nX1B_X\nX___X\nXA__X\nX___X\nXC_DX\nXXXXX-XXXXX\nX__BX\nX___X\nXA__X\nX__DX\nXC__X\nXXXXX-XXXXX\nX__BX\nX___X\nXA__X\nX_D3X\nX_C_X\nXXXXX-XXXXX\nX__BX\nX___X\nXA__X\nX_D2X\nX__CX\nXXXXX-XXXXX\nX__BX\nX___X\nXAD_X\nX__1X\nX___X\nXXXXX-XXXXX\nX__BX\nX_D_X\nXA__X\nX___X\nX___X\nXXXXX-XXXXX\nX__BX\nXD__X\nXA__X\nX___X\nX___X\nXXXXX\n";
+		
+		var ancho=0;
+		var alto=0;
 		window.onload= function(){
 			var tablero = document.getElementById("tablero");
 			var mapa = 	"";
@@ -237,11 +246,20 @@
 			
 			var pintar = function(){
 				ctx.beginPath();
-				bot1.pintar();
-				bot2.pintar();
-				bot3.pintar();
-				bot4.pintar();
-				
+				for(var i=0; i<alto;i++){
+					if(bot1.getY()==i){
+						bot1.pintar();						
+					}
+					if(bot2.getY()==i){						
+						bot2.pintar();
+					}
+					if(bot3.getY()==i){
+						bot3.pintar();						
+					}
+					if(bot4.getY()==i){
+						bot4.pintar();						
+					}
+				}
 				ctx.stroke();
 			};
 			
@@ -311,6 +329,10 @@
 						}
 						cont++;
 					}
+					ancho=i;
+					alto=j+1;
+					console.log("ancho "+ancho);
+					console.log("alto "+alto);
 					bot1.ejecutarAccion("I");
 					bot2.ejecutarAccion("I");
 					bot3.ejecutarAccion("I");
