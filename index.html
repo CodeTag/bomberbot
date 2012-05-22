@@ -33,20 +33,30 @@
 			this.xIndex=xIndex;
 			this.yIndex=yIndex;
 			this.accion= "";
+			this.vivo=true;
 			
 			this.sprite.onload = function(){};
 			this.sprite.src = "img/bots/r"+tipoRobot+".png";
 			
 			this.pintar= function(){
-				ctx.drawImage(this.sprite, 10+size*xIndex,10-size*0.65+size*yIndex,size,size*1.5);
+				if(this.vivo){
+					ctx.drawImage(this.sprite, 10+size*xIndex,10-size*0.65+size*yIndex,size,size*1.5);
+				}
 			};
 			
-			this.getX= function(){
-				return xIndex;
-			}
-			this.getY= function(){
-				return yIndex;
-			}
+			this.setX= function(i){
+				xIndex = i;
+			};
+			this.setY= function(j){
+				yIndex = j;
+			};
+			this.setVivo= function(vivo){
+				this.vivo=vivo;
+				this.accion="M";
+			};
+			this.isVivo= function(){
+				return vivo;
+			};
 			this.getAccion = function(){
 				switch(this.accion){
 					case "N":
@@ -57,53 +67,77 @@
 					return "\u2193";
 					case "E":
 					return "\u2190";
+					case "P":
+					return "pasa";
+					default:
+					return "muerto";
 				}
 				return "";
 			};
 			this.ejecutarAccion = function(accion){
 				this.accion = accion[0];
+				
+				if(this.accion=='N'&&yIndex<=1){
+					this.accion="";
+				}
+				else if(this.accion=='S'&&yIndex>=11){
+					this.accion="";
+				}
+				else if(this.accion=='E'&&xIndex<=1){
+					this.accion="";
+				}
+				else if(this.accion=='O'&&xIndex>=11){
+					this.accion="";
+				}
+				this.vivo=true;
+			};
+			this.actualizarCoordenadas = function(i, j){
 				xIndex= Math.round(xIndex);
 				yIndex= Math.round(yIndex);
-				if(this.accion=='N'&&yIndex<=2){
-					this.accion="";
-				}
-				else if(this.accion=='S'&&yIndex>=10){
-					this.accion="";
-				}
-				else if(this.accion=='E'&&xIndex<=2){
-					this.accion="";
-				}
-				else if(this.accion=='O'&&xIndex>=10){
-					this.accion="";
-				}
 				
+				if(xIndex>i){
+					this.ejecutarAccion("E");
+				}else if(xIndex<i){
+					this.ejecutarAccion("O");
+				}else if(yIndex>j){
+					this.ejecutarAccion("N");
+				
+				}else if(yIndex<j){
+					this.ejecutarAccion("S");
+				}else{
+					this.ejecutarAccion("P");
+				}
 			};
 			this.mover = function(){
-				switch(this.accion){
-					case 'N':
-						yIndex-=1/MOVF;
-						if(yIndex%MOVF){
-							accion="";
-						}
-					break;
-					case 'O':
-						xIndex+=1/MOVF;
-						if(xIndex%MOVF){
-							accion="";
-						}
-					break;
-					case 'E':
-						xIndex-=1/MOVF;
-						if(xIndex%MOVF){
-							accion="";
-						}
-					break;
-					case 'S':
-						yIndex+=1/MOVF;
-						if(yIndex%MOVF){
-							accion="";							
-						}
-					break;
+				if(this.vivo){
+					switch(this.accion){
+						case 'N':
+							yIndex-=1/MOVF;
+							if(yIndex%MOVF){
+								accion="";
+							}
+						break;
+						case 'O':
+							xIndex+=1/MOVF;
+							if(xIndex%MOVF){
+								accion="";
+							}
+						break;
+						case 'E':
+							xIndex-=1/MOVF;
+							if(xIndex%MOVF){
+								accion="";
+							}
+						break;
+						case 'S':
+							yIndex+=1/MOVF;
+							if(yIndex%MOVF){
+								accion="";							
+							}
+						break;
+						default:
+						break;
+					}
 				}
 			};
 		};
@@ -123,6 +157,95 @@
 						"X_XLX_X_XLX_X\n"+
 						"XC_LL_L_LL_DX\n"+
 						"XXXXXXXXXXXXX\n";
+			
+			var mapaHistory =  ["XXXXX\n"+
+								"XA_BX\n"+
+								"X___X\n"+
+								"XLLLX\n"+
+								"X_3_X\n"+
+								"XC_DX\n"+
+								"XXXXX\n",
+
+								"XXXXX\n"+
+								"XA__X\n"+
+								"X__BX\n"+
+								"XLL_X\n"+
+								"X_2DX\n"+
+								"XC__X\n"+
+								"XXXXX\n",
+
+								"XXXXX\n"+
+								"X3_BX\n"+
+								"XA__X\n"+
+								"X_L_X\n"+
+								"X_1_X\n"+
+								"XC_DX\n"+
+								"XXXXX\n",
+
+								"XXXXX\n"+
+								"X2B_X\n"+
+								"X___X\n"+
+								"XA__X\n"+
+								"X___X\n"+
+								"XCD_X\n"+
+								"XXXXX\n",
+								
+								"XXXXX\n"+
+								"X1B_X\n"+
+								"X___X\n"+
+								"XA__X\n"+
+								"X___X\n"+
+								"XC_DX\n"+
+								"XXXXX\n",
+								
+								"XXXXX\n"+
+								"X__BX\n"+
+								"X___X\n"+
+								"XA__X\n"+
+								"X__DX\n"+
+								"XC__X\n"+
+								"XXXXX\n",
+								
+								"XXXXX\n"+
+								"X__BX\n"+
+								"X___X\n"+
+								"XA__X\n"+
+								"X_D3X\n"+
+								"X_C_X\n"+
+								"XXXXX\n",
+								
+								"XXXXX\n"+
+								"X__BX\n"+
+								"X___X\n"+
+								"XA__X\n"+
+								"X_D2X\n"+
+								"X__CX\n"+
+								"XXXXX\n",
+								
+								"XXXXX\n"+
+								"X__BX\n"+
+								"X___X\n"+
+								"XAD_X\n"+
+								"X__1X\n"+
+								"X___X\n"+
+								"XXXXX\n",
+								
+								"XXXXX\n"+
+								"X__BX\n"+
+								"X___X\n"+
+								"XAD_X\n"+
+								"X___X\n"+
+								"X___X\n"+
+								"XXXXX\n",
+								
+								"XXXXX\n"+
+								"X__BX\n"+
+								"X_D_X\n"+
+								"XA__X\n"+
+								"X___X\n"+
+								"X___X\n"+
+								"XXXXX\n"];
+			
 			if(tablero.getContext) {
 				ctx = tablero.getContext('2d');
 				ctx.font = '18px Calibri';
@@ -130,11 +253,13 @@
 				bloque.src = "img/SolidoBloque50.png";
 				var ladrillo = new Image();
 				ladrillo.src = "img/LadrilloBloque50.png";
+				var bomba = new Image();
+				bomba.src = "img/bombaAzul.png";
 				
-				var bot1 = new Bot("bot1",crearRandomRobot(),7,7);
-				var bot2 = new Bot("bot2",crearRandomRobot(),5,7);
-				var bot3 = new Bot("bot3",crearRandomRobot(),5,5);
-				var bot4 = new Bot("bot4",crearRandomRobot(),7,5);
+				var bot1 = new Bot("bot1",crearRandomRobot(),0,0);
+				var bot2 = new Bot("bot2",crearRandomRobot(),0,0);
+				var bot3 = new Bot("bot3",crearRandomRobot(),0,0);
+				var bot4 = new Bot("bot4",crearRandomRobot(),0,0);
 			}
 			
 			var fondo = function(){
@@ -153,6 +278,12 @@
 						break;
 						case 'L':
 							ctx.drawImage(ladrillo, 10+i*size,10+j*size,size,size);
+							i++;
+						break;
+						case '3':
+						case '2':
+						case '1':
+							ctx.drawImage(bomba, 10+i*size,10+j*size,size,size);
 							i++;
 						break;
 						case 'A':
@@ -238,30 +369,99 @@
     		})();
     		
     		var leerMapa= function(){
-    			
-    		};
-    		
-    		
-    		var movs = ["N","E","S","P","O"];
-    		
-    		(function animloop(){
-				requestAnimFrame(animloop);
-				moverBots();
-				if(cont%MOVF==0){
-					turno++;
+    			var i=0;
+				var j=0;
+				var cont=0;
+				mapa= mapaHistory[turno];
+    			if(turno==0){
+    				while(cont<mapa.length){
+						switch(mapa[cont]){
+							case '\n':
+								j++;
+								i=0;
+							break;
+							case 'A':
+								bot1.setX(i);
+								bot1.setY(j);
+								i++;
+							break;
+							case 'B':
+								bot2.setX(i);
+								bot2.setY(j);
+								i++;
+							break;
+							case 'C':
+								bot3.setX(i);
+								bot3.setY(j);
+								i++;
+							break;
+							case 'D':
+								bot4.setX(i);
+								bot4.setY(j);
+								i++;
+							break;
+							default:
+								i++;
+								break;
+						}
+						cont++;
+					}
 					
-    				leerMapa();
-    				var tipoMov1 = Math.floor(Math.random()*(movs.length));
-    				var tipoMov2 = Math.floor(Math.random()*(movs.length));
-    				var tipoMov3 = Math.floor(Math.random()*(movs.length));
-    				var tipoMov4 = Math.floor(Math.random()*(movs.length));
-    				bot1.ejecutarAccion(movs[tipoMov1]);
-    				bot2.ejecutarAccion(movs[tipoMov2]);
-    				bot3.ejecutarAccion(movs[tipoMov3]);
-    				bot4.ejecutarAccion(movs[tipoMov4]);
-    				MOVF=tempVelocidad;
-    				pintarStatus();
+    			}
+    			bot1.setVivo(false);
+    			bot2.setVivo(false);
+    			bot3.setVivo(false);
+    			bot4.setVivo(false);
+				while(cont<mapa.length){
+					switch(mapa[cont]){
+						
+						case '\n':
+							j++;
+							i=0;
+						break;
+						case 'A':
+							bot1.actualizarCoordenadas(i,j);
+							i++;
+						break;
+						case 'B':
+							bot2.actualizarCoordenadas(i,j);
+							i++;
+							break;
+						case 'C':
+							bot3.actualizarCoordenadas(i,j);
+							i++;
+							break;
+						case 'D':
+							bot4.actualizarCoordenadas(i,j);
+							i++;
+							break;
+						default:
+							i++;
+						break;
+					}
+					cont++;
 				}
+    			
+			};
+    			
+    		var movs = ["N","E","S","P","O"];
+    		var fin=false;
+    		(function animloop(){
+				if(!fin){
+					requestAnimFrame(animloop);
+				}
+				if(cont%MOVF==0){
+					if(turno==mapaHistory.length){
+						fin=true;
+					}else{
+						leerMapa();
+						MOVF=tempVelocidad;
+						pintarStatus();
+						turno++;
+					}
+				}
+				moverBots();	
+				
 			})();
 			
 		};
