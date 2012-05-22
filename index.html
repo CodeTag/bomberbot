@@ -11,7 +11,8 @@
 	<script src="bot.js" ></script>
 	<script>
 		var tipos= ['c','d','r','t'];
-		var colores= ['a','b','f','m','n','r','v'];
+		//var colores= ['a','b','f','m','n','r','v'];
+		var colores= ['v'];
 		var ctx=undefined;
 		var size=50;
 		var MOVF=30;
@@ -100,19 +101,19 @@
 				ctx.fillText("Turno "+turno,750,50);
 				
 				
-				ctx.drawImage(bot1.sprite,750,70,20,30);
+				ctx.drawImage(bot1.sprite,0,0,50,75,750,70,20,30);
 				ctx.fillText(bot1.nombre,710,85);
 				ctx.fillText(bot1.getAccion(),800,85);
 				
-				ctx.drawImage(bot2.sprite,750,120,20,30);
+				ctx.drawImage(bot2.sprite,0,0,50,75,750,120,20,30);
 				ctx.fillText(bot2.nombre,710,135);
 				ctx.fillText(bot2.getAccion(),800,135);
 				
-				ctx.drawImage(bot3.sprite,750,170,20,30);
+				ctx.drawImage(bot3.sprite,0,0,50,75,750,170,20,30);
 				ctx.fillText(bot3.nombre,710,185);
 				ctx.fillText(bot3.getAccion(),800,185);
 				
-				ctx.drawImage(bot4.sprite,750,220,20,30);
+				ctx.drawImage(bot4.sprite,0,0,50,75,750,220,20,30);
 				ctx.fillText(bot4.nombre,710,220);
 				ctx.fillText(bot4.getAccion(),800,235); 
 				ctx.stroke();

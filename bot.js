@@ -1,4 +1,5 @@
-
+var sizeBot=50;
+var animation=[0,1,0,2];
 var Bot = function(nombre, tipoRobot, xIndex, yIndex){
 	this.nombre = nombre;
 	this.sprite = new Image();
@@ -10,9 +11,17 @@ var Bot = function(nombre, tipoRobot, xIndex, yIndex){
 	this.sprite.onload = function(){};
 	this.sprite.src = "img/bots/r"+tipoRobot+".png";
 	
+	this.xAnimationFrame=0;
+	
+	this.contAnimation=0;
+	
 	this.pintar= function(ctx, size){
 		if(this.vivo){
-			ctx.drawImage(this.sprite, 10+size*xIndex,10-size*0.65+size*yIndex,size,size*1.5);
+			if(this.accion=="N" ||this.accion=="S"||this.accion=="O"||this.accion=="E" ){
+				ctx.drawImage(this.sprite, sizeBot*animation[this.xAnimationFrame], 0, sizeBot, sizeBot*1.5,10+size*xIndex, 10-size*0.65+size*yIndex, size, size*1.5);
+			}else{
+				ctx.drawImage(this.sprite, 0,0,sizeBot,sizeBot*1.5,10+size*xIndex,10-size*0.65+size*yIndex,size,size*1.5);
+			}
 		}
 	};
 	
@@ -118,6 +127,15 @@ var Bot = function(nombre, tipoRobot, xIndex, yIndex){
 				break;
 				default:
 				break;
+			}
+		
+			this.contAnimation++;
+			if(this.contAnimation%10==0){
+				this.contAnimation=0;
+				this.xAnimationFrame++;
+				if(this.xAnimationFrame>=animation.length){
+					this.xAnimationFrame=0;
+				}
 			}
 		}
 	};
