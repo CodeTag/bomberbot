@@ -27,13 +27,7 @@
 			if(tablero.getContext) {
 				ctx = tablero.getContext('2d');
 				bot.onload = function() {
-					//ctx.drawImage(bot, posRelativaInicioX,
-					//posRelativaInicioY,
-					//ancho relativo,
-					//altor relativo
-					//350-size/2,250-size*3/4,size,size*1.5);
-					
-					ctx.drawImage(bot, 0,0,size,size*1.4,350-size/2,250-size*3/4,size,size*1.5);
+					ctx.drawImage(bot, 0,0,size,size*1.5,350-size/2,250-size*3/4,size,size*1.5);
 		    	};	
 			}
 			bot.src = "img/bots/r"+tipos[tipoSel]+colores[colorSel]+".png";
