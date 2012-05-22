@@ -147,19 +147,7 @@
 		var mapaSource="XXXXX\nXA_BX\nX___X\nXLLLX\nX_3_X\nXC_DX\nXXXXX\n-XXXXX\nXA__X\nX__BX\nXLL_X\nX_2DX\nXC__X\nXXXXX\n-XXXXX\nX3_BX\nXA__X\nX_L_X\nX_1_X\nXC_DX\nXXXXX\n-XXXXX\nX2B_X\nX___X\nXA__X\nX___X\nXCD_X\nXXXXX\n-XXXXX\nX1B_X\nX___X\nXA__X\nX___X\nXC_DX\nXXXXX\n-XXXXX\nX__BX\nX___X\nXA__X\nX__DX\nXC__X\nXXXXX\n-XXXXX\nX__BX\nX___X\nXA__X\nX_D3X\nX_C_X\nXXXXX\n-XXXXX\nX__BX\nX___X\nXA__X\nX_D2X\nX__CX\nXXXXX\n-XXXXX\nX__BX\nX___X\nXAD_X\nX__1X\nX___X\nXXXXX\n-XXXXX\nX__BX\nX_D_X\nXA__X\nX___X\nX___X\nXXXXX\n-XXXXX\nX__BX\nXD__X\nXA__X\nX___X\nX___X\nXXXXX\n";
 		window.onload= function(){
 			var tablero = document.getElementById("tablero");
-			var mapa = 	"XXXXXXXXXXXXX\n"+
-						"XA_LL_L_LL_BX\n"+
-						"X_XLX_X_XLX_X\n"+
-						"XLL_______LLX\n"+
-						"XLX_XLXLX_XLX\n"+
-						"X___LLLLL___X\n"+
-						"XLX_XLXLX_XLX\n"+
-						"X___LLLLL___X\n"+
-						"XLX_XLXLX_XLX\n"+
-						"XLL_______LLX\n"+
-						"X_XLX_X_XLX_X\n"+
-						"XC_LL_L_LL_DX\n"+
-						"XXXXXXXXXXXXX\n";
+			var mapa = 	"";
 			
 			var mapaHistory =  mapaSource.split("-");
 			
@@ -173,10 +161,10 @@
 				var bomba = new Image();
 				bomba.src = "img/bombaAzul.png";
 				
-				var bot1 = new Bot("bot1",crearRandomRobot(),0,0);
-				var bot2 = new Bot("bot2",crearRandomRobot(),0,0);
-				var bot3 = new Bot("bot3",crearRandomRobot(),0,0);
-				var bot4 = new Bot("bot4",crearRandomRobot(),0,0);
+				var bot1 = new Bot("bot1",crearRandomRobot(),-1,-1);
+				var bot2 = new Bot("bot2",crearRandomRobot(),-1,-1);
+				var bot3 = new Bot("bot3",crearRandomRobot(),-1,-1);
+				var bot4 = new Bot("bot4",crearRandomRobot(),-1,-1);
 			}
 			
 			var fondo = function(){
