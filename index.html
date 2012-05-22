@@ -8,6 +8,7 @@
 			background-color:#004;
 		}
 	</style>
+	<script src="bot.js" ></script>
 	<script>
 		var tipos= ['c','d','r','t'];
 		var colores= ['a','b','f','m','n','r','v'];
@@ -27,128 +28,6 @@
 			return tipos[tipoSel]+""+colores[colorSel];
 		};
 		
-		var Bot = function(nombre, tipoRobot, xIndex, yIndex){
-			this.nombre = nombre;
-			this.sprite = new Image();
-			this.xIndex=xIndex;
-			this.yIndex=yIndex;
-			this.accion= "";
-			this.vivo=true;
-			
-			this.sprite.onload = function(){};
-			this.sprite.src = "img/bots/r"+tipoRobot+".png";
-			
-			this.pintar= function(){
-				if(this.vivo){
-					ctx.drawImage(this.sprite, 10+size*xIndex,10-size*0.65+size*yIndex,size,size*1.5);
-				}
-			};
-			
-			this.setX= function(i){
-				xIndex = i;
-			};
-			this.getX= function(){
-				return Math.round(xIndex);
-			};
-			this.setY= function(j){
-				yIndex = j;
-			};
-			this.getY= function(){
-				return Math.round(yIndex);
-			};
-			this.setVivo= function(vivo){
-				this.vivo=vivo;
-				this.accion="M";
-			};
-			this.isVivo= function(){
-				return vivo;
-			};
-			this.getAccion = function(){
-				switch(this.accion){
-					case "N":
-					return "\u2191";
-					case "O":
-					return "\u2192";
-					case "S":
-					return "\u2193";
-					case "E":
-					return "\u2190";
-					case "P":
-					return "pasa";
-					case "I":
-					return "Ini";
-					default:
-					return "M";
-				}
-				return "";
-			};
-			this.ejecutarAccion = function(accion){
-				this.accion = accion[0];
-				
-				if(this.accion=='N'&&yIndex<=1){
-					this.accion="";
-				}
-				else if(this.accion=='S'&&yIndex>=11){
-					this.accion="";
-				}
-				else if(this.accion=='E'&&xIndex<=1){
-					this.accion="";
-				}
-				else if(this.accion=='O'&&xIndex>=11){
-					this.accion="";
-				}
-				this.vivo=true;
-			};
-			this.actualizarCoordenadas = function(i, j){
-				xIndex= Math.round(xIndex);
-				yIndex= Math.round(yIndex);
-				
-				if(xIndex>i){
-					this.ejecutarAccion("E");
-				}else if(xIndex<i){
-					this.ejecutarAccion("O");
-				}else if(yIndex>j){
-					this.ejecutarAccion("N");
-				
-				}else if(yIndex<j){
-					this.ejecutarAccion("S");
-				}else{
-					this.ejecutarAccion("P");
-				}
-			};
-			this.mover = function(){
-				if(this.vivo){
-					switch(this.accion){
-						case 'N':
-							yIndex-=1/MOVF;
-							if(yIndex%MOVF){
-								accion="";
-							}
-						break;
-						case 'O':
-							xIndex+=1/MOVF;
-							if(xIndex%MOVF){
-								accion="";
-							}
-						break;
-						case 'E':
-							xIndex-=1/MOVF;
-							if(xIndex%MOVF){
-								accion="";
-							}
-						break;
-						case 'S':
-							yIndex+=1/MOVF;
-							if(yIndex%MOVF){
-								accion="";							
-							}
-						break;
-						default:
-						break;
-					}
-				}
-			};
-		};
 		
 		var mapaSource="XXXXX\nXA_BX\nX___X\nXLLLX\nX_3_X\nXC_DX\nXXXXX-XXXXX\nXA__X\nX__BX\nXLL_X\nX_2DX\nXC__X\nXXXXX-XXXXX\nX3_BX\nXA__X\nX_L_X\nX_1_X\nXC_DX\nXXXXX-XXXXX\nX2B_X\nX___X\nXA__X\nX___X\nXCD_X\nXXXXX-XXXXX\nX1B_X\nX___X\nXA__X\nX___X\nXC_DX\nXXXXX-XXXXX\nX__BX\nX___X\nXA__X\nX__DX\nXC__X\nXXXXX-XXXXX\nX__BX\nX___X\nXA__X\nX_D3X\nX_C_X\nXXXXX-XXXXX\nX__BX\nX___X\nXA__X\nX_D2X\nX__CX\nXXXXX-XXXXX\nX__BX\nX___X\nXAD_X\nX__1X\nX___X\nXXXXX-XXXXX\nX__BX\nX_D_X\nXA__X\nX___X\nX___X\nXXXXX-XXXXX\nX__BX\nXD__X\nXA__X\nX___X\nX___X\nXXXXX\n";
 		
@@ -194,16 +73,11 @@
 							ctx.drawImage(ladrillo, 10+i*size,10+j*size,size,size);
 							i++;
 						break;
-						case '3':
-						case '2':
-						case '1':
+						case '3':case '2':case '1':
 							ctx.drawImage(bomba, 10+i*size,10+j*size,size,size);
 							i++;
 						break;
-						case 'A':
-						case 'B':
-						case 'C':
-						case 'D':
+						case 'A':case 'B':case 'C':case 'D':
 						case '_':
 							i++;
 						break;
@@ -248,16 +122,16 @@
 				ctx.beginPath();
 				for(var i=0; i<alto;i++){
 					if(bot1.getY()==i){
-						bot1.pintar();						
+						bot1.pintar(ctx, size);						
 					}
 					if(bot2.getY()==i){						
-						bot2.pintar();
+						bot2.pintar(ctx, size);
 					}
 					if(bot3.getY()==i){
-						bot3.pintar();						
+						bot3.pintar(ctx, size);						
 					}
 					if(bot4.getY()==i){
-						bot4.pintar();						
+						bot4.pintar(ctx, size);						
 					}
 				}
 				ctx.stroke();
@@ -267,13 +141,12 @@
 			var factorMovbots=1/MOVF;
 			
 			var cont=0;
-			var direccion="o";
 			var moverBots= function(){
 				
-				bot1.mover();
-				bot2.mover();
-				bot3.mover();
-				bot4.mover();
+				bot1.mover(MOVF);
+				bot2.mover(MOVF);
+				bot3.mover(MOVF);
+				bot4.mover(MOVF);
 				fondo();
 				pintar();
 				cont++;
