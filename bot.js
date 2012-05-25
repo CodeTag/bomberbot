@@ -48,11 +48,11 @@ var Bot = function(nombre, tipoRobot, xIndex, yIndex){
 		switch(this.accion){
 			case "N":
 			return "\u2191";
-			case "O":
+			case "E":
 			return "\u2192";
 			case "S":
 			return "\u2193";
-			case "E":
+			case "O":
 			return "\u2190";
 			case "P":
 			return "pasa";
@@ -72,10 +72,10 @@ var Bot = function(nombre, tipoRobot, xIndex, yIndex){
 		else if(this.accion=='S'&&yIndex>=11){
 			this.accion="";
 		}
-		else if(this.accion=='E'&&xIndex<=1){
+		else if(this.accion=='O'&&xIndex<=1){
 			this.accion="";
 		}
-		else if(this.accion=='O'&&xIndex>=11){
+		else if(this.accion=='E'&&xIndex>=11){
 			this.accion="";
 		}
 		this.vivo=true;
@@ -85,9 +85,9 @@ var Bot = function(nombre, tipoRobot, xIndex, yIndex){
 		yIndex= Math.round(yIndex);
 		
 		if(xIndex>i){
-			this.ejecutarAccion("E");
-		}else if(xIndex<i){
 			this.ejecutarAccion("O");
+		}else if(xIndex<i){
+			this.ejecutarAccion("E");
 		}else if(yIndex>j){
 			this.ejecutarAccion("N");
 		
@@ -107,13 +107,13 @@ var Bot = function(nombre, tipoRobot, xIndex, yIndex){
 						accion="";
 					}
 				break;
-				case 'O':
+				case 'E':
 					xIndex+=1/MOVF;
 					if(xIndex%MOVF){
 						accion="";
 					}
 				break;
-				case 'E':
+				case 'O':
 					xIndex-=1/MOVF;
 					if(xIndex%MOVF){
 						accion="";
