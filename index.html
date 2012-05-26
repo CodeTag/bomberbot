@@ -16,6 +16,11 @@
 		var size=80;
 		var MOVF=30;
 		var turno=0;
+		var sizeBomb=50;
+
+		var xBombAnimationFrame=0;
+		var contAnimation=0;
+		var bombAnimation = [0,1,2,3];
 		
 		var tempVelocidad=MOVF;
 		var cambiarVelocidad= function(velocidad){
@@ -29,7 +34,7 @@
 		};
 		
 		
-		var mapaSource="XXXXX\nXA_BX\nX___X\nXLLLX\nX_3_X\nXC_DX\nXXXXX-XXXXX\nXA__X\nX__BX\nXLL_X\nX_2DX\nXC__X\nXXXXX-XXXXX\nX3_BX\nXA__X\nX_L_X\nX_1_X\nXC_DX\nXXXXX-XXXXX\nX2B_X\nX___X\nXA__X\nX___X\nXCD_X\nXXXXX-XXXXX\nX1B_X\nX___X\nXA__X\nX___X\nXC_DX\nXXXXX-XXXXX\nX__BX\nX___X\nXA__X\nX__DX\nXC__X\nXXXXX-XXXXX\nX__BX\nX___X\nXA__X\nX_D3X\nX_C_X\nXXXXX-XXXXX\nX__BX\nX___X\nXA__X\nX_D2X\nX__CX\nXXXXX-XXXXX\nX__BX\nX___X\nXAD_X\nX__1X\nX___X\nXXXXX-XXXXX\nX__BX\nX_D_X\nXA__X\nX___X\nX___X\nXXXXX-XXXXX\nX__BX\nXD__X\nXA__X\nX___X\nX___X\nXXXXX\n";
+		var mapaSource="XXXXX\nXA_BX\nX___X\nXLLLX\nX_3_X\nXC_DX\nXXXXX-XXXXX\nXA__X\nX__BX\nXLLLX\nX_2DX\nXC__X\nXXXXX-XXXXX\nX3_BX\nXA__X\nXLLLX\nX_1_X\nXC_DX\nXXXXX-XXXXX\nX2B_X\nXA__X\nXL#LX\nX###X\nXC#DX\nXXXXX-XXXXX\nX1B_X\nX_A_X\nXL_LX\nX___X\nX_CDX\nXXXXX-XXXXX\nX##BX\nX#A_X\nXL_LX\nX__DX\nXC__X\nXXXXX-XXXXX\nX__BX\nXA__X\nXL_LX\nX_D3X\nX3C_X\nXXXXX-XXXXX\nX__BX\nXA__X\nXL_LX\nX_D2X\nX2_CX\nXXXXX-XXXXX\nX__BX\nXA__X\nXLDLX\nX__1X\nX1_CX\nXXXXX-XXXXX\nX__BX\nXAD_X\nXL_#X\nX###X\nX###X\nXXXXX-XXXXX\nX__BX\nXAD_X\nXL__X\nX___X\nX___X\nXXXXX\n";
 		
 		var ancho=0;
 		var alto=0;
@@ -47,7 +52,10 @@
 				var ladrillo = new Image();
 				ladrillo.src = "img/LadrilloBloque50.png";
 				var bomba = new Image();
-				bomba.src = "img/bombaAzul.png";
+				bomba.src = "img/spritebomb.png";
+
+				var fuego = new Image();
+				fuego.src = "img/spritefuego.png";
 				
 				var bot1 = new Bot("bot1",crearRandomRobot(),-1,-1);
 				var bot2 = new Bot("bot2",crearRandomRobot(),-1,-1);
@@ -73,8 +81,12 @@
 							ctx.drawImage(ladrillo, 10+i*size,10+j*size,size,size);
 							i++;
 						break;
-						case '3':case '2':case '1':
-							ctx.drawImage(bomba, 10+i*size,10+j*size,size,size);
+						case '4': case '3':case '2':case '1':
+							ctx.drawImage(bomba, sizeBomb*bombAnimation[xBombAnimationFrame], 0,sizeBomb, sizeBomb, 10+i*size,10+j*size,size,size);
+							i++;
+						break;
+						case '#':
+							ctx.drawImage(fuego, sizeBomb*0,0,sizeBomb, sizeBomb,10+i*size, 10+j*size,size,size);
 							i++;
 						break;
 						case 'A':case 'B':case 'C':case 'D':
@@ -255,6 +267,14 @@
     		(function animloop(){
 				if(!fin){
 					requestAnimFrame(animloop);
+					contAnimation++;
+					if(contAnimation%10==0){
+						contAnimation=0;
+						xBombAnimationFrame++;
+						if(xBombAnimationFrame>=bombAnimation.length){
+							xBombAnimationFrame=0;
+						}
+					}
 				}
 				if(cont%MOVF==0){
 					if(turno==mapaHistory.length){
