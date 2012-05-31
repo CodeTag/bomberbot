@@ -1,13 +1,40 @@
 ﻿var STATUS_UNKNOW="unknow";
 var STATUS_WAITING="waiting";
 var STATUS_PLAYING="playing";
+var BOMB_TIME=5;
 
 var validActions=['N','E','S','O','P','BN','BE','BS','BO'];
+
+var Bomba=function(xIndex,yIndex,potencia){
+  "use strict"
+  this.xIndex=xIndex||-1;
+  this.yIndex=yIndex||-1;
+  this.countDown=3;
+  this.potencia=potencia||1;
+
+  this.getCountDown= function(){
+    return this.countDown;
+  };
+  this.getXindex= function(){
+    return this.xIndex;
+  };
+  this.getYindex= function(){
+    return this.yIndex;
+  };
+  this.decrementar= function(){
+    this.countDown--;
+    return this.countDown==0;
+  };
+  this.getPotencia=function(){
+    return potencia;
+  };
+};
 
 var mapGenerator= function(){
   "use strict"
 
   var mapa=undefined;
+  var bombas= [];
 
   this.generarMapa=function(nivel){
 
@@ -17,7 +44,7 @@ var mapGenerator= function(){
     ['X','_','X','L','X','_','X'],
     ['X','L','L','L','L','L','X'],
     ['X','_','X','L','X','_','X'],
-    ['X','C','_','X','_','D','X'],
+    ['X','C','_','L','_','D','X'],
     ['X','X','X','X','X','X','X'],
     ];
     return mapa;
@@ -95,6 +122,95 @@ var mapGenerator= function(){
           socket.xIndex--;
         }
       break;
+      //poniendo bombas
+      case 'BN':
+        if(mapa[socket.yIndex-1][socket.xIndex]=='_'){
+          mapa[socket.yIndex-1][socket.xIndex]=BOMB_TIME;
+          var bomba = new Bomba(socket.xIndex, socket.yIndex-1,socket.pow;
+          bombas.push(bomba);
+        }
+      break;
+      case 'BE':
+        if(mapa[socket.yIndex][socket.xIndex+1]=='_'){
+          mapa[socket.yIndex][socket.xIndex+1]=BOMB_TIME;
+          var bomba = new Bomba(socket.xIndex+1, socket.yIndex,socket.pow);
+          bombas.push(bomba);
+        }
+      break;
+      case 'BS':
+        if(mapa[socket.yIndex+1][socket.xIndex]=='_'){
+          mapa[socket.yIndex+1][socket.xIndex]=BOMB_TIME;
+          var bomba = new Bomba(socket.xIndex, socket.yIndex+1,socket.pow);
+          bombas.push(bomba);
+        }
+      break;
+      case 'BO':
+        if(mapa[socket.yIndex][socket.xIndex-1]=='_'){
+          mapa[socket.yIndex][socket.xIndex-1]=BOMB_TIME;
+          var bomba = new Bomba(socket.xIndex-1, socket.yIndex,socket.pow);
+          bombas.push(bomba);
+        }
+      break;
+    }
+  };
+  this.destruir = function(i, j){
+    if(i<0||j<0||i>=mapa[0].length||j>=mapa.length){
+      return;
+    }
+    if(mapa[j][i]=="L"){
+      mapa[j][i]="_";
+      return true;
+    }else if(mapa[j][i]=="X"){
+      return true;
+    }else if(mapa[j][i]=="A"){
+      console.log("A debe morir");
+    }else if(mapa[j][i]=="B"){
+      console.log("B debe morir");
+    }else if(mapa[j][i]=="C"){
+      console.log("C debe morir");
+    }else if(mapa[j][i]=="D"){
+      console.log("D debe morir");
+    }else if(typeof(mapa[j][i])==="number"){
+      //poner otra bomba para que estalle en el siguiente turno.
+    }
+
+  }
+  this.actualizarMapa= function(){
+    var bomba =undefined;
+    for (var i = bombas.length - 1; i >= 0; i--) {
+      bomba=bombas[i];
+      if(bomba.decrementar()){
+        //destruir!!!
+        var xb=bomba.getXindex();
+        var yb=bomba.getYindex()
+        mapa[yb][xb]='_';
+
+        for(var h= 1; h<=bomba.getPotencia();h++){
+          if(this.destruir(xb-h,yb)){
+            break;
+          }
+        }
+        for(var h= 1; h<=bomba.getPotencia();h++){
+          if(this.destruir(xb+h,yb)){
+            break;
+          }
+        }
+        for(var h= 1; h<=bomba.getPotencia();h++){
+          if(this.destruir(xb,yb-h)){
+            break;
+          }
+        }
+        for(var h= 1; h<=bomba.getPotencia();h++){
+          if(this.destruir(xb,yb+h)){
+            break;
+          }
+        }
+
+        bombas.splice(i,1);
+        //delete bomba;
+      }else{
+        mapa[bomba.getYindex()][bomba.getXindex()]=bomba.getCountDown()+"";
+      }
     }
   };
 };
@@ -120,6 +236,7 @@ var mapGenerator= function(){
       socket.ficha=undefined;
       socket.xIndex=undefined;
       socket.yIndex=undefined;
+      socket.pow=1;
       socket.token= token;
       socket.status=STATUS_WAITING;
       playersConnected.push(socket);
@@ -210,9 +327,11 @@ var mapGenerator= function(){
         }
     }
     //algun procesamiento
+    maper.actualizarMapa();
+
     for(var i=0; i<partida.jugadores;i++){
-        //console.log("jugador "+partida[partida.lista[i]].id+" accion: "+partida[partida.lista[i]].accion);
         partida[partida.lista[i]].accion=undefined;
+
         partida[partida.lista[i]].write(cont+";"+maper.getMapa()+"\r\n");
         partida[partida.lista[i]].resume();
     }
