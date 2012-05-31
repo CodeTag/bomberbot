@@ -1,26 +1,139 @@
-﻿(function bomberbot(){
+﻿var STATUS_UNKNOW="unknow";
+var STATUS_WAITING="waiting";
+var STATUS_PLAYING="playing";
+
+var validActions=['N','E','S','O','P','BN','BE','BS','BO'];
+
+var mapGenerator= function(){
+  "use strict"
+
+  var mapa=undefined;
+
+  this.generarMapa=function(nivel){
+
+    mapa=[
+    ['X','X','X','X','X','X','X'],
+    ['X','A','_','L','_','B','X'],
+    ['X','_','X','L','X','_','X'],
+    ['X','L','L','L','L','L','X'],
+    ['X','_','X','L','X','_','X'],
+    ['X','C','_','X','_','D','X'],
+    ['X','X','X','X','X','X','X'],
+    ];
+    return mapa;
+  };
+  this.getMapa= function(){
+    return mapa.join("\n");
+  };
+
+  var cont=0;
+  var players=[];
+  this.addPlayer=function(socket){
+    cont++;
+    players.push(socket);
+    switch(cont){
+      case 1:
+        socket.ficha='A';
+        socket.xIndex=1;
+        socket.yIndex=1;
+      break;
+      case 2:
+        socket.ficha='B';
+        socket.xIndex=5;
+        socket.yIndex=1;
+      break;
+      case 3:
+        socket.ficha='C';
+        socket.xIndex=1;
+        socket.yIndex=5;
+      break;
+      case 4:
+        socket.ficha='D';
+        socket.xIndex=5;
+        socket.yIndex=5;
+      break;
+    }
+    if(cont==4){
+      for(var i=0; i<players.length;i++){
+        players[i].status=STATUS_PLAYING;
+        players[i].write("Empezo la partida\r\n");
+        players[i].write(mapa.join("\n")+";"+players[i].ficha+"\r\n");
+      }  
+    }
+  };
+
+  this.moverJugador= function(socket){
+    //no olvidar que no debe ser secuencial, sino todos al tiempo!
+    //o el que primero se arrodilla primero se confiesa...
+    switch(socket.accion){
+      //primero movimiento
+      case 'N':
+        if(mapa[socket.yIndex-1][socket.xIndex]=='_'){
+          mapa[socket.yIndex][socket.xIndex]='_';
+          mapa[socket.yIndex-1][socket.xIndex]=socket.ficha;
+          socket.yIndex--;
+        }
+      break;
+      case 'E':
+        if(mapa[socket.yIndex][socket.xIndex+1]=='_'){
+          mapa[socket.yIndex][socket.xIndex]='_';
+          mapa[socket.yIndex][socket.xIndex+1]=socket.ficha;
+          socket.xIndex++;
+        }
+      break;
+      case 'S':
+        if(mapa[socket.yIndex+1][socket.xIndex]=='_'){
+          mapa[socket.yIndex][socket.xIndex]='_';
+          mapa[socket.yIndex+1][socket.xIndex]=socket.ficha;
+          socket.yIndex++;
+        }
+      break;
+      case 'O':
+        if(mapa[socket.yIndex][socket.xIndex-1]=='_'){
+          mapa[socket.yIndex][socket.xIndex]='_';
+          mapa[socket.yIndex][socket.xIndex-1]=socket.ficha;
+          socket.xIndex--;
+        }
+      break;
+    }
+  };
+};
+
+(function bomberbot(){
   "use strict"
   var net = require("net");
-
-  var STATUS_UNKNOW="unknow";
-  var STATUS_WAITING="waiting";
-  var STATUS_PLAYING="playing";
-
-  var validActions=['N\r\n','E\r\n','S\r\n','O\r\n','P\r\n','BN\r\n','BE\r\n','BS\r\n','BO\r\n'];
   var playersConnected =[];
   var id=0;
 
+  var maper = new mapGenerator();
+  console.log(maper);
+
   var asignarId = function(socket){
+    
     socket.id= ++id;
     socket.user=undefined;
     socket.fault=0;
+
     socket.login = function login(usuario, token){
-      console.log("hacer algo con este usuario "+usuario+" con token "+token + " para el socket "+socket.id );
+      //autenticar usuario
       socket.user= usuario;
+      socket.ficha=undefined;
+      socket.xIndex=undefined;
+      socket.yIndex=undefined;
       socket.token= token;
-      socket.status='STATUS_WAITING';
+      socket.status=STATUS_WAITING;
       playersConnected.push(socket);
     };
+
+    socket.jugar = function jugar(accion){
+      if(validActions.indexOf(accion)!=-1){
+        socket.accion = accion;
+        console.log("es una accion valida ");
+      }else{
+        console.log("no es una accion valida "+accion);
+      }
+    };
+
   };
 
   var server = net.createServer( function(socket){
@@ -43,30 +156,41 @@
           socket.login(info[0], info[1]);
         break;
         case STATUS_WAITING:
-          console.log("");
+          console.log(socket.user + " mientras waiting "+info[0]);
+          if(info[0]=="salir"){
+            socket.end("hasta luego mano");
+          }
+          socket.pause();
+          setTimeout(socket.resume(),1000);
+
         break;
         case STATUS_PLAYING:
-          socket.accion=info[0];
+          socket.jugar(info[0].toUpperCase());
+          socket.pause();
+          maper.moverJugador(socket);
         break;
         default:
-          socket.write("mensaje no valido "+(++socket.fault)+"fallas \r\n");
+          console.log(socket.status);
+          socket.write("status no valido "+(++socket.fault)+"fallas \r\n");
           if(socket.fault==3){
             socket.end("ha completado tres fallas, se ha desconectado");
           }
         break;
       }
+      
+    });
 
-      socket.on("end",function(){
-        console.log("mataron al socket "+socket.id);
-        //sacar al socket del juego en el que este.
+    socket.on("end",function(){
+      console.log("mataron al socket "+socket.id);
+      //sacar al socket del juego en el que este.
+      if(partida.lista != undefined){
         var index= partida.lista.indexOf(socket.id);
         partida.lista.splice(index,1);
         delete partida[socket.id];
-      });
+      }
+      var index= playersConnected.indexOf(socket.id);
+      playersConnected.splice(index,1);
 
-      console.log("do something "+info);
-      //console.log(socket);
-      socket.pause();
     });
 
   });
@@ -89,7 +213,7 @@
     for(var i=0; i<partida.jugadores;i++){
         //console.log("jugador "+partida[partida.lista[i]].id+" accion: "+partida[partida.lista[i]].accion);
         partida[partida.lista[i]].accion=undefined;
-        partida[partida.lista[i]].write(" <turno "+cont+" >");
+        partida[partida.lista[i]].write(cont+";"+maper.getMapa()+"\r\n");
         partida[partida.lista[i]].resume();
     }
     if(cont>=200){
@@ -111,17 +235,16 @@
     }else{
       //selecciona 4 jugadores siguiendo unas reglas
       console.log(playersConnected.length);
+      maper.generarMapa();
       partida = [];
       partida.lista=[];
       partida.jugadores=4;
       for(var i =0; i<partida.jugadores;i++){
         partida[playersConnected[i].id]=playersConnected[i];
         partida.lista.push(playersConnected[i].id);
+        maper.addPlayer(playersConnected[i]);
       }
-      for(var i=0; i<partida.jugadores;i++){
-        partida[partida.lista[i]].status=STATUS_PLAYING;
-        partida[partida.lista[i]].write("empezo la partida\r\n");
-      }
+      
       cont=0;
       console.time('duracion partida');
       setTimeout(jugarPartida,1100); 
