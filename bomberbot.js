@@ -126,7 +126,7 @@ var mapGenerator= function(){
       case 'BN':
         if(mapa[socket.yIndex-1][socket.xIndex]=='_'){
           mapa[socket.yIndex-1][socket.xIndex]=BOMB_TIME;
-          var bomba = new Bomba(socket.xIndex, socket.yIndex-1,socket.pow;
+          var bomba = new Bomba(socket.xIndex, socket.yIndex-1,socket.pow);
           bombas.push(bomba);
         }
       break;
