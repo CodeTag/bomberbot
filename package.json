@@ -1,0 +1,14 @@
+{
+    "name": "bomberbot"
+  , "version": "0.0.1"
+  , "private": true
+  , "dependencies": {
+      "express": "2.5.8"
+    , "jade": ">= 0.0.1"
+    , "mongodb": ">= 0.9.6-7"
+    , "mongoose": ">= 2.5.10"
+  },
+	"engines": {
+		"node": "0.6.x"
+	}
+}
