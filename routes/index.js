@@ -1,5 +1,4 @@
 
 app.get('/', function(req, res){
-	var user = req.body.user;
-	res.render('index');
+    res.render('index', {layout: true});
 });
