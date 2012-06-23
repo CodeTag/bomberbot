@@ -1,6 +1,6 @@
 
 app.get('/users', function(req, res){
-  res.render('user/list', { users: db.users });
+  //res.render('user/list', { users: db.users });
 });
 
 app.get('/user/add', function(req, res){
@@ -9,7 +9,7 @@ app.get('/user/add', function(req, res){
 
 app.post('/user', function(req, res){
   var user = req.body.user;
-  db.users.push(user);
+//  db.users.push(user);
   res.redirect('/users');
 });
 

@@ -83,8 +83,7 @@ var mapGenerator= function(){
     if(cont==4){
       for(var i=0; i<players.length;i++){
         players[i].status=STATUS_PLAYING;
-        players[i].write("Empezo la partida\r\n");
-        players[i].write(mapa.join("\n")+";"+players[i].ficha+"\r\n");
+        players[i].write("Empezo la partida;"+mapa.join("\n")+";"+players[i].ficha+";\r\n");
       }  
     }
   };
@@ -126,7 +125,7 @@ var mapGenerator= function(){
       case 'BN':
         if(mapa[socket.yIndex-1][socket.xIndex]=='_'){
           mapa[socket.yIndex-1][socket.xIndex]=BOMB_TIME;
-          var bomba = new Bomba(socket.xIndex, socket.yIndex-1,socket.pow;
+          var bomba = new Bomba(socket.xIndex, socket.yIndex-1,socket.pow);
           bombas.push(bomba);
         }
       break;
@@ -328,11 +327,13 @@ var mapGenerator= function(){
     }
     //algun procesamiento
     maper.actualizarMapa();
-
+    console.log("\n----");
+    console.log(maper.getMapa());
+    console.log("----");
     for(var i=0; i<partida.jugadores;i++){
         partida[partida.lista[i]].accion=undefined;
 
-        partida[partida.lista[i]].write(cont+";"+maper.getMapa()+"\r\n");
+        partida[partida.lista[i]].write("turno;"+cont+";"+maper.getMapa()+";\r\n");
         partida[partida.lista[i]].resume();
     }
     if(cont>=200){
