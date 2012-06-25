@@ -37,6 +37,7 @@ var models = require("./models.js");
       socket.token= token;
       socket.status=STATUS_WAITING;
       playersConnected.push(socket);
+      console.log(usuario+" conectado");
     };
 
     socket.jugar = function jugar(accion){
@@ -68,7 +69,7 @@ var models = require("./models.js");
                  "**          /_====_\\     /_====_\\                                            **\n"+
                  "**                                                                           **\n"+
                  "**                                                                           **\n"+
-                 "*******************************************************************************\r\n");
+                 "*******************************************************************************\n");
     socket.on("connect", function(){
       asignarId(socket);
       socket.write("Ingrese usuario y token:\r\n");
