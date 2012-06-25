@@ -51,7 +51,13 @@ var Map=function(id, map){
 };
 var copiarMapa=function(mapaACopiar){
   var mapaNuevo= new Map(mapaACopiar.id,[]);
-  mapaNuevo.map= mapaACopiar.map.valueOf().slice();
+  //mapaNuevo.map= mapaACopiar.map.slice();
+  for(var j=0; j<mapaACopiar.map.length;j++){
+    mapaNuevo.map[j]=[];
+    for(var i=0; i<mapaACopiar.map[0].length;i++){
+      mapaNuevo.map[j][i]=mapaACopiar.map[j][i];
+    }
+  }
   mapaNuevo.ax=mapaACopiar.ax.valueOf();
   mapaNuevo.ay=mapaACopiar.ay.valueOf();
   mapaNuevo.bx=mapaACopiar.bx.valueOf();
@@ -100,7 +106,7 @@ var fs= require("fs");
         mapa.dy=row;
       }
       map[row]=data.split("");
-      map[row].splice(map[row].length-1);
+      //map[row].splice(map[row].length-1);
       row++;
     }
   }
@@ -118,7 +124,7 @@ exports.gameController= function(){
   this.generarMapa=function(nivel){
     cont=0;
     var mapaElegido= Math.floor(Math.random()*maps.length);
-    mapa=copiarMapa(maps[1]);
+    mapa=copiarMapa(maps[mapaElegido]);
     console.log("mapa "+mapa.id);
     bloquesDestruidos=[];
     players=[];
@@ -318,7 +324,9 @@ exports.gameController= function(){
               mapa.map[j][i]="P";//mas poder!
             }else if(randomPower<POW_POWER_PROBABILITY+BOMB_POWER_PROBABILITY){
               mapa.map[j][i]="V";//mas bombas!
-            }  
+            }else{
+              mapa.map[j][i]="_";  
+            }
           }else{
             mapa.map[j][i]="_";
           }

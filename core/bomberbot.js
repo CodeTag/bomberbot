@@ -4,6 +4,7 @@ var STATUS_PLAYING="playing";
 var DURACION_TURNO=200;
 var MAX_TURNOS=200;
 var WIN_POINTS=25;
+var FREEZE_TIME=7000;
 
 var validActions=['N','E','S','O','P','BN','BE','BS','BO'];
 
@@ -107,15 +108,22 @@ var models = require("./models.js");
     });
 
     socket.on("end",function(){
-      console.log("mataron al socket "+socket.id);
-      //sacar al socket del juego en el que este.
+      if(socket.status== STATUS_PLAYING){
+        controller.eliminarJugador(socket);  
+        socket.points+=-15;
+      }
       if(partida.lista != undefined){
         var index= partida.lista.indexOf(socket.id);
-        partida.lista.splice(index,1);
-        delete partida[socket.id];
+        
+        if(index!=-1){
+          partida.lista.splice(index,1);
+          partida.jugadores--;  
+        }
       }
       var index= playersConnected.indexOf(socket);
-      playersConnected.splice(index,1);
+      if(index!=-1){
+        playersConnected.splice(index,1);  
+      }
     });
     socket.on("error", function(){
       if(socket.status== STATUS_PLAYING){
@@ -219,7 +227,7 @@ var models = require("./models.js");
         console.log(partida[i].ficha+" "+ partida[i].user+" puntos: "+partida[i].points);
         partida[i].status=STATUS_WAITING;
       }
-      setTimeout(crearPartida,20000);
+      setTimeout(crearPartida,FREEZE_TIME);
     }else{
       setTimeout(jugarPartida,DURACION_TURNO);  
     }
