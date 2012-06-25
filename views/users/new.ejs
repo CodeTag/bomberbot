@@ -1,5 +1,19 @@
-<form class="form-horizontal" id="registerHere" method='post' action='/sessions'>
+<form class="form-horizontal" id="registerHere" method='post' action='/users'>
   <fieldset>
+
+    <div class="control-group">
+      <label class="control-label">Nombre Completo</label>
+      <div class="controls">
+      <input type="text" class="input-xlarge" id="user_fullname" name="user[fullname]" rel="popover" data-content="Nombre y Apellid" data-original-title="Full Name">
+      </div>
+    </div>
+
+    <div class="control-group">
+      <label class="control-label">Nombre de Usuario</label>
+      <div class="controls">
+      <input type="text" class="input-xlarge" id="user_name" name="user[username]" rel="popover" data-content="Nick, Alias, Motto, etc." data-original-title="Username">
+      </div>
+    </div>
 
     <div class="control-group">
       <label class="control-label">Correo Electr&oacute;nico</label>
@@ -18,7 +32,7 @@
     <div class="control-group">
       <label class="control-label"></label>
       <div class="controls">
-      <button type="submit" class="btn btn-success" >Ingresar</button>
+      <button type="submit" class="btn btn-success" >Registrarme!</button>
       </div>
     </div>
 

@@ -1,7 +1,6 @@
 // Sessions
 app.get('/sessions/new', function(req, res) {
-  res.render('sessions/new.ejs', 
-  {
+  res.render('sessions/new.ejs', {
     locals: { user: new app.models.User() },
     layout: true, title: 'AI Challenge - Bomberbot - Registro'
   });
@@ -14,7 +13,7 @@ app.post('/sessions', function(req, res) {
 
       // Remember me
       if (req.body.remember_me) {
-        var loginToken = new LoginToken({ email: user.email });
+        var loginToken = new app.models.LoginToken({ email: user.email });
         loginToken.save(function() {
           res.cookie('logintoken', loginToken.cookieValue, { expires: new Date(Date.now() + 2 * 604800000), path: '/' });
           res.redirect('/documents');
@@ -31,7 +30,7 @@ app.post('/sessions', function(req, res) {
 
 app.del('/sessions', app.util.loadUser, function(req, res) {
   if (req.session) {
-    LoginToken.remove({ email: req.currentUser.email }, function() {});
+    app.models.LoginToken.remove({ email: req.currentUser.email }, function() {});
     res.clearCookie('logintoken');
     req.session.destroy(function() {});
   }
