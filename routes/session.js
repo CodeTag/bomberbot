@@ -1,14 +1,14 @@
 // Sessions
 app.get('/sessions/new', function(req, res) {
-  res.render('index.ejs', 
+  res.render('sessions/new.ejs', 
   {
-    //locals: { user: new User() },
+    locals: { user: new app.models.User() },
     layout: true, title: 'AI Challenge - Bomberbot - Registro'
   });
 });
 
 app.post('/sessions', function(req, res) {
-  User.findOne({ email: req.body.user.email }, function(err, user) {
+  app.models.User.findOne({ email: req.body.user.email }, function(err, user) {
     if (user && user.authenticate(req.body.user.password)) {
       req.session.user_id = user.id;
 
