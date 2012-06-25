@@ -37,6 +37,59 @@ var Bomba=function(player, xIndex, yIndex){
   };
 };
 
+var Map=function(id, map){
+  this.id=id;
+  this.map=map;
+  this.ax=-1;
+  this.ay=-1;
+  this.bx=-1;
+  this.by=-1;
+  this.cx=-1;
+  this.cy=-1;
+  this.dx=-1;
+  this.ay=-1;
+}
+
+var maps=[];
+var fs= require("fs");
+(function(){
+  //var input = fs.createReadStream('core/maps.txt');
+  var array = fs.readFileSync('core/maps.txt').toString().split("\n");
+  var map=[];
+  var row=0;
+  var data="";
+  for(i in array) {
+    data= array[i];
+    if(data.indexOf("map")!=-1){
+      map=[];
+      map.id= parseInt(data.substr(3));
+      maps[map.id]=map;
+      row=0;
+    }else if(data.indexOf("fin")!=-1){
+      console.log("carga de mapas finalizada");
+    }else{
+      if(data.indexOf("A")!=-1){
+        map.ax=data.indexOf("A");
+        map.ay=row;
+      }
+      if(data.indexOf("B")!=-1){
+        map.bx=data.indexOf("B");
+        map.by=row;
+      }
+      if(data.indexOf("C")!=-1){
+        map.cx=data.indexOf("C");
+        map.cy=row;
+      }
+      if(data.indexOf("D")!=-1){
+        map.dx=data.indexOf("D");
+        map.dy=row;
+      }
+      map[row]=data.split("");
+      map[row].splice(map[row].length-1);
+      row++;
+    }
+  }
+})();
 
 exports.gameController= function(){
   "use strict"
@@ -49,19 +102,9 @@ exports.gameController= function(){
 
   this.generarMapa=function(nivel){
     cont=0;
-    mapa=[
-    ['X','X','X','X','X','X','X','X','X','X','X'],
-    ['X','A','_','L','L','L','L','L','_','B','X'],
-    ['X','_','L','L','X','L','X','L','X','_','X'],
-    ['X','L','L','L','_','_','_','L','L','L','X'],
-    ['X','L','L','_','X','L','X','_','X','L','X'],
-    ['X','L','L','_','L','L','L','_','L','L','X'],
-    ['X','L','L','_','X','L','X','_','X','L','X'],
-    ['X','L','L','L','_','_','_','L','L','L','X'],
-    ['X','_','L','L','X','L','X','L','X','_','X'],
-    ['X','C','_','L','L','L','L','L','_','D','X'],
-    ['X','X','X','X','X','X','X','X','X','X','X']
-    ];
+    var mapaElegido= Math.floor(Math.random()*maps.length);
+    mapa=maps[mapaElegido];
+    console.log("mapa "+mapa.id);
     bloquesDestruidos=[];
     players=[];
     bombas= [];
@@ -80,23 +123,24 @@ exports.gameController= function(){
     switch(cont){
       case 1:
         player.ficha='A';
-        player.xIndex=1;
-        player.yIndex=1;
+        player.xIndex=mapa.ax;
+        player.yIndex=mapa.ay;
       break;
       case 2:
         player.ficha='B';
-        player.xIndex=9;
-        player.yIndex=1;
+        player.xIndex=mapa.bx;
+        player.yIndex=mapa.by;
       break;
       case 3:
         player.ficha='C';
-        player.xIndex=1;
-        player.yIndex=9;
+        player.xIndex=mapa.cx;
+        player.yIndex=mapa.cy;
       break;
       case 4:
         player.ficha='D';
-        player.xIndex=9;
-        player.yIndex=9;
+        player.xIndex=mapa.dx;
+        player.yIndex=mapa.dy;
+        console.log("D "+player.xIndex+" "+player.yIndex)
       break;
     }
     if(cont==4){
