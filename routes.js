@@ -3,7 +3,7 @@ var vm = require('vm')
 
 module.exports = function(app, models){
   var dir = __dirname + '/routes';
-
+  console.log(app.util);
   fs.readdirSync(dir).forEach(function(file){
     var str = fs.readFileSync(dir + '/' + file, 'utf8');
 
