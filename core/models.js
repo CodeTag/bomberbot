@@ -3,6 +3,7 @@ var STATUS_WAITING="waiting";
 var STATUS_PLAYING="playing";
 var BLOCK_POINTS=1; //puntos por destruir un bloque
 var BOT_POINTS=10; //puntos por destruir un bot
+var DEATH_POINTS=-8; //puntos por destruir un bot
 var SUICIDE_POINTS =-30; //puntos por destruir un bot
 
 var POW_POWER_PROBABILITY=5;
@@ -228,7 +229,8 @@ exports.gameController= function(){
         player.points+=SUICIDE_POINTS;
         console.log(ficha +" ha cometido suicidio!");
       }else{
-        points.total+=BOT_POINTS;  
+        points.total+=BOT_POINTS;
+        player.points+=DEATH_POINTS;
         console.log(ficha +" ha destruido a "+player.ficha+" total puntos "+player.points);
       }
       player.write("PERDIO;\r\n");

@@ -16,7 +16,6 @@ var models = require("./models.js");
   var id=0;
 
   var controller = new models.gameController();
-  console.log(controller);
 
   var asignarId = function(socket){
     
@@ -121,6 +120,7 @@ var models = require("./models.js");
     socket.on("error", function(){
       if(socket.status== STATUS_PLAYING){
         controller.eliminarJugador(socket);  
+        socket.points+=-15;
       }
       if(partida.lista != undefined){
         var index= partida.lista.indexOf(socket.id);
@@ -138,6 +138,7 @@ var models = require("./models.js");
     socket.on("close", function(){
       if(socket.status== STATUS_PLAYING){
         controller.eliminarJugador(socket);  
+        socket.points+=-15;
       }
       if(partida.lista != undefined){
         var index= partida.lista.indexOf(socket.id);
@@ -151,6 +152,25 @@ var models = require("./models.js");
       if(index!=-1){
         playersConnected.splice(index,1);  
       }
+    });
+    socket.on("timeout", function(){
+      if(socket.status== STATUS_PLAYING){
+        controller.eliminarJugador(socket);  
+        socket.points+=-15;
+      }
+      if(partida.lista != undefined){
+        var index= partida.lista.indexOf(socket.id);
+        
+        if(index!=-1){
+          partida.lista.splice(index,1);
+          partida.jugadores--;  
+        }
+      }
+      var index= playersConnected.indexOf(socket);
+      if(index!=-1){
+        playersConnected.splice(index,1);  
+      }
+      socket.end("se ha desconectado por inactividad");
     });
   });
 
