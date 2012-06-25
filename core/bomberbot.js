@@ -38,6 +38,7 @@ var models = require("./models.js");
       if(validActions.indexOf(accion)!=-1){
         socket.accion = accion;
       }else{//no es una accion valida
+
       }
     };
 
@@ -109,8 +110,42 @@ var models = require("./models.js");
         partida.lista.splice(index,1);
         delete partida[socket.id];
       }
-      var index= playersConnected.indexOf(socket.id);
+      var index= playersConnected.indexOf(socket);
       playersConnected.splice(index,1);
+    });
+    socket.on("error", function(){
+      if(socket.status== STATUS_PLAYING){
+        controller.eliminarJugador(socket);  
+      }
+      if(partida.lista != undefined){
+        var index= partida.lista.indexOf(socket.id);
+        
+        if(index!=-1){
+          partida.lista.splice(index,1);
+          partida.jugadores--;  
+        }
+      }
+      var index= playersConnected.indexOf(socket);
+      if(index!=-1){
+        playersConnected.splice(index,1);  
+      }
+    });
+    socket.on("close", function(){
+      if(socket.status== STATUS_PLAYING){
+        controller.eliminarJugador(socket);  
+      }
+      if(partida.lista != undefined){
+        var index= partida.lista.indexOf(socket.id);
+        
+        if(index!=-1){
+          partida.lista.splice(index,1);
+          partida.jugadores--;  
+        }
+      }
+      var index= playersConnected.indexOf(socket);
+      if(index!=-1){
+        playersConnected.splice(index,1);  
+      }
     });
   });
 
@@ -125,12 +160,12 @@ var models = require("./models.js");
           //deberia echarlo
           //console.log("jugador "+partida[partida.lista[i]].id+" no juega: "+partida[partida.lista[i]].accion);
         }else{
-          console.log("jugador "+partida[partida.lista[i]].ficha+" accion: "+partida[partida.lista[i]].accion);
+         // console.log("jugador "+partida[partida.lista[i]].ficha+" accion: "+partida[partida.lista[i]].accion);
         }
     }
     //algun procesamiento
     controller.actualizarMapa();
-    console.log("\n----");
+    console.log("\n--"+turno+"--");
     console.log(controller.getMapa());
     console.log("----");
     for(var i=partida.jugadores-1; i>=0;i--){
@@ -138,7 +173,6 @@ var models = require("./models.js");
         if(player.status==STATUS_WAITING){
           console.log(player.user+" "+player.ficha+" muerto");
           partida.lista.splice(i,1);
-          console.log(partida.lista);
           partida.jugadores--;
         }else{
           if(partida.jugadores==1){
