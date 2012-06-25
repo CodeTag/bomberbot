@@ -1,7 +1,8 @@
 ﻿var STATUS_UNKNOW="unknow";
 var STATUS_WAITING="waiting";
 var STATUS_PLAYING="playing";
-
+var DURACION_TURNO=200;
+var MAX_TURNOS=200;
 
 var validActions=['N','E','S','O','P','BN','BE','BS','BO'];
 
@@ -29,6 +30,8 @@ var models = require("./models.js");
       socket.xIndex=undefined;
       socket.yIndex=undefined;
       socket.pow=1;
+      socket.limitBombs=1;
+      socket.contBombs=0;
       socket.token= token;
       socket.status=STATUS_WAITING;
       playersConnected.push(socket);
@@ -151,6 +154,7 @@ var models = require("./models.js");
 
   var turno=0;
   var partida = [];
+  var finalizoPartida=true;
 
   var jugarPartida = function(){
     turno++;
@@ -177,20 +181,22 @@ var models = require("./models.js");
         }else{
           if(partida.jugadores==1){
             console.log(player.user+" "+player.ficha+" gano");
+            finalizoPartida=true;
           }
           player.accion=undefined;
           player.write("TURNO;"+turno+";"+controller.getMapa()+";\r\n");
           player.resume();
         }
     }
-    if(turno>=200){
+    if(turno>=MAX_TURNOS||finalizoPartida){
+      finalizoPartida=true;
       console.timeEnd('duracion partida');
       for(var i=0; i<partida.jugadores;i++){
         partida[partida.lista[i]].status=STATUS_WAITING;
       }
       setTimeout(crearPartida,20000);
     }else{
-      setTimeout(jugarPartida,1100);  
+      setTimeout(jugarPartida,DURACION_TURNO);  
     }
   };
 
@@ -200,6 +206,7 @@ var models = require("./models.js");
       setTimeout(crearPartida,5000);
       return undefined;
     }else{
+      //iniciarPartida;
       //selecciona 4 jugadores siguiendo unas reglas
       console.log(playersConnected.length);
       controller.generarMapa();
@@ -212,8 +219,9 @@ var models = require("./models.js");
         controller.addPlayer(playersConnected[i]);
       }
       turno=0;
+      finalizoPartida=false;
       console.time('duracion partida');
-      setTimeout(jugarPartida,1100); 
+      setTimeout(jugarPartida,DURACION_TURNO); 
     }
   };
   
