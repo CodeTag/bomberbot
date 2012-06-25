@@ -1,6 +1,12 @@
 var STATUS_UNKNOW="unknow";
 var STATUS_WAITING="waiting";
 var STATUS_PLAYING="playing";
+var BLOCK_POINTS=1; //puntos por destruir un bloque
+var BOT_POINTS=10; //puntos por destruir un bot
+var SUICIDE_POINTS =-30; //puntos por destruir un bot
+
+var POW_POWER_PROBABILITY=5;
+var BOMB_POWER_PROBABILITY=5;
 
 var BOMB_TIME=3;
 
@@ -69,6 +75,7 @@ exports.gameController= function(){
     players.push(player);
     player.pow=1;
     player.limitBombs=1;
+    player.points=0;
     switch(cont){
       case 1:
         player.ficha='A';
@@ -204,18 +211,26 @@ exports.gameController= function(){
   this.agregarBloqueDestruido=function(i,j){
     bloquesDestruidos[i+","+j]=true;
   };
-  this.destruir = function(i, j){
+  this.destruir = function(i, j, points, ficha){
     if(i<0||j<0||i>=mapa[0].length||j>=mapa.length){
       return;
     }
     if(mapa[j][i]=="L"){
       mapa[j][i]="#";
+      points.total+=BLOCK_POINTS;
       this.agregarBloqueDestruido(i,j);
       return true;
     }else if(mapa[j][i]=="X"){
       return true;
     }else if(mapa[j][i]=="A"||mapa[j][i]=="B"||mapa[j][i]=="C"||mapa[j][i]=="D"){
       var player = this.getPlayer(mapa[j][i]);
+      if(ficha==player.ficha){
+        player.points+=SUICIDE_POINTS;
+        console.log(ficha +" ha cometido suicidio!");
+      }else{
+        points.total+=BOT_POINTS;  
+        console.log(ficha +" ha destruido a "+player.ficha+" total puntos "+player.points);
+      }
       player.write("PERDIO;\r\n");
       player.status=STATUS_WAITING;
       mapa[j][i]=player.ficha.toLowerCase();
@@ -237,9 +252,9 @@ exports.gameController= function(){
           //generar poderes aleatoriamente al romperse un bloque
           if(this.fueUnBloque(i, j)){
             var randomPower = Math.random()*100;
-            if(randomPower<5){
+            if(randomPower<POW_POWER_PROBABILITY){
               mapa[j][i]="P";//mas poder!
-            }else if(randomPower<5){
+            }else if(randomPower<POW_POWER_PROBABILITY+BOMB_POWER_PROBABILITY){
               mapa[j][i]="V";//mas bombas!
             }  
           }else{
@@ -251,8 +266,10 @@ exports.gameController= function(){
       };
     };
     var bomba =undefined;
+    var points=[];//encapsulamiento para obtener valor por referencia
     for (var i = bombas.length - 1; i >= 0; i--) {
       bomba=bombas[i];
+      points.total=0;
       if(bomba.decrementar()){
         //destruir!!!
         var xb=bomba.getXindex();
@@ -260,25 +277,26 @@ exports.gameController= function(){
         mapa[yb][xb]='#';
 
         for(var h= 1; h<=bomba.getPotencia();h++){
-          if(this.destruir(xb-h,yb)){
+          if(this.destruir(xb-h,yb, points,bomba.player.ficha)){
             break;
           }
         }
         for(var h= 1; h<=bomba.getPotencia();h++){
-          if(this.destruir(xb+h,yb)){
+          if(this.destruir(xb+h,yb, points,bomba.player.ficha)){
             break;
           }
         }
         for(var h= 1; h<=bomba.getPotencia();h++){
-          if(this.destruir(xb,yb-h)){
+          if(this.destruir(xb,yb-h, points,bomba.player.ficha)){
             break;
           }
         }
         for(var h= 1; h<=bomba.getPotencia();h++){
-          if(this.destruir(xb,yb+h)){
+          if(this.destruir(xb,yb+h, points,bomba.player.ficha)){
             break;
           }
         }
+        bomba.player.points+=points.total;
         bomba.player.contBombs--;
         bombas.splice(i,1);
         //delete bomba;

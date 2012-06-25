@@ -3,6 +3,7 @@ var STATUS_WAITING="waiting";
 var STATUS_PLAYING="playing";
 var DURACION_TURNO=200;
 var MAX_TURNOS=200;
+var WIN_POINTS=25;
 
 var validActions=['N','E','S','O','P','BN','BE','BS','BO'];
 
@@ -32,6 +33,7 @@ var models = require("./models.js");
       socket.pow=1;
       socket.limitBombs=1;
       socket.contBombs=0;
+      socket.points=0;
       socket.token= token;
       socket.status=STATUS_WAITING;
       playersConnected.push(socket);
@@ -175,12 +177,13 @@ var models = require("./models.js");
     for(var i=partida.jugadores-1; i>=0;i--){
         var player = partida[partida.lista[i]];
         if(player.status==STATUS_WAITING){
-          console.log(player.user+" "+player.ficha+" muerto");
+          console.log(player.user+" "+player.ficha+" muerto. total puntos: "+player.points);
           partida.lista.splice(i,1);
           partida.jugadores--;
         }else{
           if(partida.jugadores==1){
-            console.log(player.user+" "+player.ficha+" gano");
+            player.points+=WIN_POINTS;
+            console.log(player.user+" "+player.ficha+" gano. total puntos: "+player.points);
             finalizoPartida=true;
           }
           player.accion=undefined;
@@ -191,8 +194,10 @@ var models = require("./models.js");
     if(turno>=MAX_TURNOS||finalizoPartida){
       finalizoPartida=true;
       console.timeEnd('duracion partida');
-      for(var i=0; i<partida.jugadores;i++){
-        partida[partida.lista[i]].status=STATUS_WAITING;
+      console.log("puntuacion total: ");
+      for(i in partida){
+        console.log(partida[i].ficha+" "+ partida[i].user+" puntos: "+partida[i].points);
+        partida[i].status=STATUS_WAITING;
       }
       setTimeout(crearPartida,20000);
     }else{
