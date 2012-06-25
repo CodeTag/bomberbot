@@ -36,14 +36,14 @@ window.onload= function(){
         ctx = tablero.getContext('2d');
         ctx.font = '18px Calibri';
         var bloque = new Image();
-        bloque.src = "images/SolidoBloque50.png";
+        bloque.src = "img/SolidoBloque50.png";
         var ladrillo = new Image();
-        ladrillo.src = "images/LadrilloBloque50.png";
+        ladrillo.src = "img/LadrilloBloque50.png";
         var bomba = new Image();
-        bomba.src = "images/spritebomb.png";
+        bomba.src = "img/spritebomb.png";
 
         var fuego = new Image();
-        fuego.src = "images/spritefuego.png";
+        fuego.src = "img/spritefuego.png";
         
         var bot1 = new Bot("bot1",crearRandomRobot(),-1,-1);
         var bot2 = new Bot("bot2",crearRandomRobot(),-1,-1);
