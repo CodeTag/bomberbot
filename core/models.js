@@ -37,6 +37,74 @@ var Bomba=function(player, xIndex, yIndex){
   };
 };
 
+var Map=function(id, map){
+  this.id=id;
+  this.map=map;
+  this.ax=-1;
+  this.ay=-1;
+  this.bx=-1;
+  this.by=-1;
+  this.cx=-1;
+  this.cy=-1;
+  this.dx=-1;
+  this.ay=-1;
+};
+var copiarMapa=function(mapaACopiar){
+  var mapaNuevo= new Map(mapaACopiar.id,[]);
+  mapaNuevo.map= mapaACopiar.map.valueOf().slice();
+  mapaNuevo.ax=mapaACopiar.ax.valueOf();
+  mapaNuevo.ay=mapaACopiar.ay.valueOf();
+  mapaNuevo.bx=mapaACopiar.bx.valueOf();
+  mapaNuevo.by=mapaACopiar.by.valueOf();
+  mapaNuevo.cx=mapaACopiar.cx.valueOf();
+  mapaNuevo.cy=mapaACopiar.cy.valueOf();
+  mapaNuevo.dx=mapaACopiar.dx.valueOf();
+  mapaNuevo.dy=mapaACopiar.dy.valueOf();
+  console.log("se ha creado un mapa nuevop");
+  return mapaNuevo;
+};
+
+var maps=[];
+var fs= require("fs");
+(function(){
+  //var input = fs.createReadStream('core/maps.txt');
+  var array = fs.readFileSync('core/maps.txt').toString().split("\n");
+  var mapa=undefined;
+  var map=[];
+  var row=0;
+  var data="";
+  for(i in array) {
+    data= array[i];
+    if(data.indexOf("map")!=-1){
+      map=[];
+      mapa= new Map(parseInt(data.substr(3)),map);
+      maps[mapa.id]=mapa;
+      row=0;
+    }else if(data.indexOf("fin")!=-1){
+      console.log("carga de mapas finalizada");
+    }else{
+      if(data.indexOf("A")!=-1){
+        mapa.ax=data.indexOf("A");
+        mapa.ay=row;
+      }
+      if(data.indexOf("B")!=-1){
+        mapa.bx=data.indexOf("B");
+        mapa.by=row;
+      }
+      if(data.indexOf("C")!=-1){
+        mapa.cx=data.indexOf("C");
+        mapa.cy=row;
+      }
+      if(data.indexOf("D")!=-1){
+        mapa.dx=data.indexOf("D");
+        mapa.dy=row;
+      }
+      map[row]=data.split("");
+      map[row].splice(map[row].length-1);
+      row++;
+    }
+  }
+})();
 
 exports.gameController= function(){
   "use strict"
@@ -49,26 +117,16 @@ exports.gameController= function(){
 
   this.generarMapa=function(nivel){
     cont=0;
-    mapa=[
-    ['X','X','X','X','X','X','X','X','X','X','X'],
-    ['X','A','_','L','L','L','L','L','_','B','X'],
-    ['X','_','L','L','X','L','X','L','X','_','X'],
-    ['X','L','L','L','_','_','_','L','L','L','X'],
-    ['X','L','L','_','X','L','X','_','X','L','X'],
-    ['X','L','L','_','L','L','L','_','L','L','X'],
-    ['X','L','L','_','X','L','X','_','X','L','X'],
-    ['X','L','L','L','_','_','_','L','L','L','X'],
-    ['X','_','L','L','X','L','X','L','X','_','X'],
-    ['X','C','_','L','L','L','L','L','_','D','X'],
-    ['X','X','X','X','X','X','X','X','X','X','X']
-    ];
+    var mapaElegido= Math.floor(Math.random()*maps.length);
+    mapa=copiarMapa(maps[1]);
+    console.log("mapa "+mapa.id);
     bloquesDestruidos=[];
     players=[];
     bombas= [];
     return mapa;
   };
   this.getMapa= function(){
-    return mapa.join("\n");
+    return mapa.map.join("\n");
   };
 
   this.addPlayer=function(player){
@@ -80,29 +138,31 @@ exports.gameController= function(){
     switch(cont){
       case 1:
         player.ficha='A';
-        player.xIndex=1;
-        player.yIndex=1;
+        player.xIndex=mapa.ax;
+        player.yIndex=mapa.ay;
       break;
       case 2:
         player.ficha='B';
-        player.xIndex=9;
-        player.yIndex=1;
+        player.xIndex=mapa.bx;
+        player.yIndex=mapa.by;
       break;
       case 3:
         player.ficha='C';
-        player.xIndex=1;
-        player.yIndex=9;
+        player.xIndex=mapa.cx;
+        player.yIndex=mapa.cy;
       break;
       case 4:
         player.ficha='D';
-        player.xIndex=9;
-        player.yIndex=9;
+        player.xIndex=mapa.dx;
+        player.yIndex=mapa.dy;
+        console.log("D "+player.xIndex+" "+player.yIndex)
       break;
     }
     if(cont==4){
+      console.log(mapa.map);
       for(var i=0; i<players.length;i++){
         players[i].status=STATUS_PLAYING;
-        players[i].write("EMPEZO;"+mapa.join("\n")+";"+players[i].ficha+";\r\n");
+        players[i].write("EMPEZO;"+mapa.map.join("\n")+";"+players[i].ficha+";\r\n");
       }  
     }
   };
@@ -123,65 +183,65 @@ exports.gameController= function(){
     switch(player.accion){
       //primero movimiento
       case 'N':
-        nextCell=mapa[player.yIndex-1][player.xIndex];
+        nextCell=mapa.map[player.yIndex-1][player.xIndex];
         if(nextCell=='_'||nextCell=='P'||nextCell=="V"){
-          mapa[player.yIndex][player.xIndex]='_';
-          mapa[player.yIndex-1][player.xIndex]=player.ficha;
+          mapa.map[player.yIndex][player.xIndex]='_';
+          mapa.map[player.yIndex-1][player.xIndex]=player.ficha;
           player.yIndex--;
         }
       break;
       case 'E':
-        nextCell=mapa[player.yIndex][player.xIndex+1];
+        nextCell=mapa.map[player.yIndex][player.xIndex+1];
         if(nextCell=='_'||nextCell=='P'||nextCell=="V"){
-          mapa[player.yIndex][player.xIndex]='_';
-          mapa[player.yIndex][player.xIndex+1]=player.ficha;
+          mapa.map[player.yIndex][player.xIndex]='_';
+          mapa.map[player.yIndex][player.xIndex+1]=player.ficha;
           player.xIndex++;
         }
       break;
       case 'S':
-        nextCell=mapa[player.yIndex+1][player.xIndex];
+        nextCell=mapa.map[player.yIndex+1][player.xIndex];
         if(nextCell=='_'||nextCell=='P'||nextCell=="V"){
-          mapa[player.yIndex][player.xIndex]='_';
-          mapa[player.yIndex+1][player.xIndex]=player.ficha;
+          mapa.map[player.yIndex][player.xIndex]='_';
+          mapa.map[player.yIndex+1][player.xIndex]=player.ficha;
           player.yIndex++;
         }
       break;
       case 'O':
-        nextCell= mapa[player.yIndex][player.xIndex-1];
+        nextCell= mapa.map[player.yIndex][player.xIndex-1];
         if(nextCell=='_'||nextCell=='P'||nextCell=="V"){
-          mapa[player.yIndex][player.xIndex]='_';
-          mapa[player.yIndex][player.xIndex-1]=player.ficha;
+          mapa.map[player.yIndex][player.xIndex]='_';
+          mapa.map[player.yIndex][player.xIndex-1]=player.ficha;
           player.xIndex--;
         }
       break;
       //poniendo bombas
       case 'BN':
-        if(player.contBombs<player.limitBombs&&mapa[player.yIndex-1][player.xIndex]=='_'){
-          mapa[player.yIndex-1][player.xIndex]=BOMB_TIME;
+        if(player.contBombs<player.limitBombs&&mapa.map[player.yIndex-1][player.xIndex]=='_'){
+          mapa.map[player.yIndex-1][player.xIndex]=BOMB_TIME;
           var bomba = new Bomba(player, player.xIndex, player.yIndex-1);
           bombas.push(bomba);
           player.contBombs++;
         }
       break;
       case 'BE':
-        if(player.contBombs<player.limitBombs&&mapa[player.yIndex][player.xIndex+1]=='_'){
-          mapa[player.yIndex][player.xIndex+1]=BOMB_TIME;
+        if(player.contBombs<player.limitBombs&&mapa.map[player.yIndex][player.xIndex+1]=='_'){
+          mapa.map[player.yIndex][player.xIndex+1]=BOMB_TIME;
           var bomba = new Bomba(player, player.xIndex+1, player.yIndex);
           bombas.push(bomba);
           player.contBombs++;
         }
       break;
       case 'BS':
-        if(player.contBombs<player.limitBombs&&mapa[player.yIndex+1][player.xIndex]=='_'){
-          mapa[player.yIndex+1][player.xIndex]=BOMB_TIME;
+        if(player.contBombs<player.limitBombs&&mapa.map[player.yIndex+1][player.xIndex]=='_'){
+          mapa.map[player.yIndex+1][player.xIndex]=BOMB_TIME;
           var bomba = new Bomba(player, player.xIndex, player.yIndex+1);
           bombas.push(bomba);
           player.contBombs++;
         }
       break;
       case 'BO':
-        if(player.contBombs<player.limitBombs&&mapa[player.yIndex][player.xIndex-1]=='_'){
-          mapa[player.yIndex][player.xIndex-1]=BOMB_TIME;
+        if(player.contBombs<player.limitBombs&&mapa.map[player.yIndex][player.xIndex-1]=='_'){
+          mapa.map[player.yIndex][player.xIndex-1]=BOMB_TIME;
           var bomba = new Bomba(player, player.xIndex-1, player.yIndex);
           bombas.push(bomba);
           player.contBombs++;
@@ -196,7 +256,7 @@ exports.gameController= function(){
     }
   };
   this.eliminarJugador= function(player){
-    mapa[player.yIndex][player.xIndex]="_";
+    mapa.map[player.yIndex][player.xIndex]="_";
     var index = players.indexOf(player);
     if(index!=-1){
       players.splice(index, 1);
@@ -213,18 +273,18 @@ exports.gameController= function(){
     bloquesDestruidos[i+","+j]=true;
   };
   this.destruir = function(i, j, points, ficha){
-    if(i<0||j<0||i>=mapa[0].length||j>=mapa.length){
+    if(i<0||j<0||i>=mapa.map[0].length||j>=mapa.map.length){
       return;
     }
-    if(mapa[j][i]=="L"){
-      mapa[j][i]="#";
+    if(mapa.map[j][i]=="L"){
+      mapa.map[j][i]="#";
       points.total+=BLOCK_POINTS;
       this.agregarBloqueDestruido(i,j);
       return true;
-    }else if(mapa[j][i]=="X"){
+    }else if(mapa.map[j][i]=="X"){
       return true;
-    }else if(mapa[j][i]=="A"||mapa[j][i]=="B"||mapa[j][i]=="C"||mapa[j][i]=="D"){
-      var player = this.getPlayer(mapa[j][i]);
+    }else if(mapa.map[j][i]=="A"||mapa.map[j][i]=="B"||mapa.map[j][i]=="C"||mapa.map[j][i]=="D"){
+      var player = this.getPlayer(mapa.map[j][i]);
       if(ficha==player.ficha){
         player.points+=SUICIDE_POINTS;
         console.log(ficha +" ha cometido suicidio!");
@@ -235,11 +295,11 @@ exports.gameController= function(){
       }
       player.write("PERDIO;\r\n");
       player.status=STATUS_WAITING;
-      mapa[j][i]=player.ficha.toLowerCase();
-    }else if(typeof(mapa[j][i])==="number"){
+      mapa.map[j][i]=player.ficha.toLowerCase();
+    }else if(typeof(mapa.map[j][i])==="number"){
       //poner otra bomba para que estalle en el siguiente turno.
-    }else if(mapa[j][i]=="_"||mapa[j][i]=="V"||mapa[j][i]=="P"){
-      mapa[j][i]="#";
+    }else if(mapa.map[j][i]=="_"||mapa.map[j][i]=="V"||mapa.map[j][i]=="P"){
+      mapa.map[j][i]="#";
     }
   };
 
@@ -247,23 +307,23 @@ exports.gameController= function(){
   this.actualizarMapa= function(){
     //limpiar #
     var cell="";
-    for (var j = 0; j <mapa.length; j++) {
-      for (var i = 0; i <mapa[0].length; i++) {
-        cell= mapa[j][i];
+    for (var j = 0; j <mapa.map.length; j++) {
+      for (var i = 0; i <mapa.map[0].length; i++) {
+        cell= mapa.map[j][i];
         if(cell=="#"){
           //generar poderes aleatoriamente al romperse un bloque
           if(this.fueUnBloque(i, j)){
             var randomPower = Math.random()*100;
             if(randomPower<POW_POWER_PROBABILITY){
-              mapa[j][i]="P";//mas poder!
+              mapa.map[j][i]="P";//mas poder!
             }else if(randomPower<POW_POWER_PROBABILITY+BOMB_POWER_PROBABILITY){
-              mapa[j][i]="V";//mas bombas!
+              mapa.map[j][i]="V";//mas bombas!
             }  
           }else{
-            mapa[j][i]="_";
+            mapa.map[j][i]="_";
           }
         }else if(cell=="a"||cell=="b"||cell=="c"||cell=="d"){
-          mapa[j][i]="_";
+          mapa.map[j][i]="_";
         }
       };
     };
@@ -276,7 +336,7 @@ exports.gameController= function(){
         //destruir!!!
         var xb=bomba.getXindex();
         var yb=bomba.getYindex()
-        mapa[yb][xb]='#';
+        mapa.map[yb][xb]='#';
 
         for(var h= 1; h<=bomba.getPotencia();h++){
           if(this.destruir(xb-h,yb, points,bomba.player.ficha)){
@@ -303,7 +363,7 @@ exports.gameController= function(){
         bombas.splice(i,1);
         //delete bomba;
       }else{
-        mapa[bomba.getYindex()][bomba.getXindex()]=bomba.getCountDown()+"";
+        mapa.map[bomba.getYindex()][bomba.getXindex()]=bomba.getCountDown()+"";
       }
 
     }
