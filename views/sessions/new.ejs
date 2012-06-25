@@ -1,1 +1,40 @@
-Formulario de Registro
+<form class="form-horizontal" id="registerHere" method='post' action='/sessions'>
+  <fieldset>
+
+    <div class="control-group">
+      <label class="control-label">Nombre Completo</label>
+      <div class="controls">
+      <input type="text" class="input-xlarge" id="user_fullname" name="user[fullname]" rel="popover" data-content="Nombre y Apellid" data-original-title="Full Name">
+      </div>
+    </div>
+
+    <div class="control-group">
+      <label class="control-label">Nombre de Usuario</label>
+      <div class="controls">
+      <input type="text" class="input-xlarge" id="user_name" name="user[username]" rel="popover" data-content="Nick, Alias, Motto, etc." data-original-title="Username">
+      </div>
+    </div>
+
+    <div class="control-group">
+      <label class="control-label">Correo Electr&oacute;nico</label>
+      <div class="controls">
+      <input type="text" class="input-xlarge" id="user_email" name="user[email]" rel="popover" data-content="Cual es su email?" data-original-title="Email">
+      </div>
+    </div>
+
+    <div class="control-group">
+      <label class="control-label">Contraseña</label>
+      <div class="controls">
+      <input type="text" class="input-xlarge" id="user_password" name="user[password]" rel="popover" data-content="una Clave para ingresar" data-original-title="Password">
+      </div>
+    </div>
+
+    <div class="control-group">
+      <label class="control-label"></label>
+      <div class="controls">
+      <button type="submit" class="btn btn-success" >Registrarme!</button>
+      </div>
+    </div>
+
+  </fieldset>
+</form>

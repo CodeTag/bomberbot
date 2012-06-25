@@ -1,18 +1,34 @@
-
-app.get('/users', function(req, res){
-  //res.render('user/list', { users: db.users });
+// Users
+app.get('/users/new', function(req, res) {
+  res.render('users/new.jade', {
+    locals: { user: new User() }
+  });
 });
 
-app.get('/user/add', function(req, res){
-  res.render('user/add');
-});
+app.post('/users.:format?', function(req, res) {
+  var user = new User(req.body.user);
 
-app.post('/user', function(req, res){
-  var user = req.body.user;
-//  db.users.push(user);
-  res.redirect('/users');
-});
+  function userSaveFailed() {
+    req.flash('error', 'Account creation failed');
+    res.render('users/new.jade', {
+      locals: { user: user }
+    });
+  }
 
-app.get('/user/:id', function(req, res){
-  res.render('user');
+  user.save(function(err) {
+    if (err) return userSaveFailed();
+
+    req.flash('info', 'Your account has been created');
+    emails.sendWelcome(user);
+
+    switch (req.params.format) {
+      case 'json':
+        res.send(user.toObject());
+      break;
+
+      default:
+        req.session.user_id = user.id;
+        res.redirect('/documents');
+    }
+  });
 });
