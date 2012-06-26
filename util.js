@@ -1,6 +1,6 @@
 function loadUser(req, res, next) {
-  if (req.session.user_id) {
-    models.User.findById(req.session.user_id, function(err, user) {
+  if (req.session.user) {
+    models.User.findById(req.session.user._id, function(err, user) {
       if (user) {
         req.currentUser = user;
         next();
