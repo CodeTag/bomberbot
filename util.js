@@ -1,6 +1,6 @@
 function loadUser(req, res, next) {
   if (req.session.user_id) {
-    User.findById(req.session.user_id, function(err, user) {
+    models.User.findById(req.session.user_id, function(err, user) {
       if (user) {
         req.currentUser = user;
         next();
@@ -27,7 +27,7 @@ function authenticateFromLoginToken(req, res, next) {
       return;
     }
 
-    User.findOne({ email: token.email }, function(err, user) {
+    models.User.findOne({ email: token.email }, function(err, user) {
       if (user) {
         req.session.user_id = user.id;
         req.currentUser = user;
