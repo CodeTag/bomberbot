@@ -210,7 +210,8 @@ var models = require("./models.js");
     //algun procesamiento
     controller.actualizarMapa();
     console.log("\n--"+turno+"--");
-    console.log(controller.getMapa());
+    var map= controller.getMapa();
+    console.log(map);
     console.log("----");
     for(var i=partida.jugadores-1; i>=0;i--){
         var player = partida[partida.lista[i]];
@@ -225,10 +226,13 @@ var models = require("./models.js");
             finalizoPartida=true;
           }
           player.accion=undefined;
-          player.write("TURNO;"+turno+";"+controller.getMapa()+";\r\n");
+          player.write("TURNO;"+turno+";"+map+";\r\n");
           player.resume();
         }
     }
+    //guardar el estado de la partida
+    partida.juego.push(map);
+
     if(turno>=MAX_TURNOS||finalizoPartida){
       finalizoPartida=true;
       console.timeEnd('duracion partida');
@@ -247,6 +251,21 @@ var models = require("./models.js");
         }
         partida[i].status=STATUS_WAITING;
       }
+      console.log("alllll");
+      //guardar log de partida 
+      
+      var logPartida="";
+      var logFila="";
+      var partidaTurno;
+      for(var t=0;t<partida.juego.length;t++){
+        logPartida+=partida.juego[t];
+        if(t<partida.juego.length-1){
+          logPartida+="-";
+        }
+        console.log("turno "+turno)
+      }
+      console.log("este fue el juego: "+logPartida);
+
       setTimeout(crearPartida,FREEZE_TIME);
     }else{
       setTimeout(jugarPartida,DURACION_TURNO);  
@@ -266,6 +285,7 @@ var models = require("./models.js");
       partida = [];//almacena los jugadores asociandolos por el id
       partida.lista=[];//ids de jugadores en esta partida
       partida.jugadores=4;
+      partida.juego=[];
       playersConnected.sort(function(a, b){
         return a.partidasJugadas-b.partidasJugadas
       });
