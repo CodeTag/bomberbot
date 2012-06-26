@@ -26,7 +26,7 @@ var models = require("./models.js");
 
     socket.login = function login(usuario, token){
       //autenticar usuario
-      socket.user= usuario;
+      socket.user= usuario;//validar y asociar
       socket.ficha=undefined;
       socket.xIndex=undefined;
       socket.yIndex=undefined;
@@ -36,6 +36,7 @@ var models = require("./models.js");
       socket.points=0;
       socket.token= token;
       socket.status=STATUS_WAITING;
+      socket.partidasJugadas=0;//cargar informacion de la base de datos
       playersConnected.push(socket);
       console.log(usuario+" conectado");
     };
@@ -247,6 +248,10 @@ var models = require("./models.js");
       partida = [];//almacena los jugadores asociandolos por el id
       partida.lista=[];//ids de jugadores en esta partida
       partida.jugadores=4;
+      playersConnected=playersConnected.sort(function(a, b){
+        return a.partidasJugadas-b.partidasJugadas
+      });
+      console.log("players connected "+playersConnected.length);
       for(var i =0; i<partida.jugadores;i++){
         partida[playersConnected[i].id]=playersConnected[i];
         partida.lista.push(playersConnected[i].id);

@@ -168,6 +168,8 @@ exports.gameController= function(){
       console.log(mapa.map);
       for(var i=0; i<players.length;i++){
         players[i].status=STATUS_PLAYING;
+        players[i].partidasJugadas++;
+        console.log(players[i].user+" juegos: "+players[i].partidasJugadas);
         players[i].write("EMPEZO;"+mapa.map.join("\n")+";"+players[i].ficha+";\r\n");
       }  
     }
