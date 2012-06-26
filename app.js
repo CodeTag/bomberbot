@@ -19,5 +19,10 @@ app.routes = routes = require('./routes')(app, models);
 app.listen(process.env.PORT || 3000);
 console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
 
+app.dynamicHelpers({
+    session: function (req, res) {
+        return req.session;
+    }
+});
 
 var serverTCP = require('./core');

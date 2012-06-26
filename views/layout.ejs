@@ -26,9 +26,9 @@
         <div class="btn-group pull-right">
           <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
             <i class="icon-user"></i>
-            <% if(locals.username){%>
+            <% if(session.user){%>
 
-            <%= console.log() %>
+            <%= session.user.username %>
             <span class="caret"></span>
           </a>
             <ul class="dropdown-menu">
@@ -98,6 +98,7 @@
   <script src="/js/jquery.js"></script>
   <script src="/js/bootstrap.js"></script>
   <script src="/js/flash.js"></script>
+  <script src="/js/json2.js"></script>
 </body>
 
 </html>

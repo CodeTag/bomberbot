@@ -10,7 +10,7 @@ app.post('/sessions', function(req, res) {
   models.User.findOne({ email: req.body.user.email }, function(err, user) {
     if (user && user.authenticate(req.body.user.password)) {
       
-      req.session.user_id = user.id;
+      req.session.user = user;
 
       // Remember me
       if (req.body.remember_me) {
