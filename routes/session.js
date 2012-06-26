@@ -7,10 +7,9 @@ app.get('/sessions/new', function(req, res) {
 });
 
 app.post('/sessions', function(req, res) {
-  console.log(app.db.model('User'));
-  console.log(app.models.User);
-  app.db.model('User').findOne({ email: req.body.user.email }, function(err, user) {
+  models.User.findOne({ email: req.body.user.email }, function(err, user) {
     if (user && user.authenticate(req.body.user.password)) {
+      
       req.session.user_id = user.id;
 
       // Remember me
@@ -24,14 +23,13 @@ app.post('/sessions', function(req, res) {
         res.redirect('/');
       }
     } else {
-      console.log('Incorrect Credentials');
       req.flash('error', 'Incorrect credentials');
       res.redirect('/sessions/new');
     }
   }); 
 });
 
-app.del('/sessions', app.util.loadUser, function(req, res) {
+app.get('/sessions/end', app.util.loadUser, function(req, res) {
   if (req.session) {
     app.models.LoginToken.remove({ email: req.currentUser.email }, function() {});
     res.clearCookie('logintoken');

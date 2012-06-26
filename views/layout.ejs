@@ -25,14 +25,29 @@
         <a class="brand" href="#"><%= title %></a>
         <div class="btn-group pull-right">
           <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-            <i class="icon-user"></i> Cuenta
+            <i class="icon-user"></i>
+            <% if(locals.username){%>
+
+            <%= username %>
             <span class="caret"></span>
           </a>
-          <ul class="dropdown-menu">
-            <li><a href="/sessions/new">Ingresar</a></li>
-            <li class="divider"></li>
-            <li><a href="/users/new">Registrarse</a></li>
-          </ul>
+            <ul class="dropdown-menu">
+              <li><a id="logout" href="/sessions/end">Salir</a></li>
+            </ul>
+
+            <% }else {%>
+            
+            Cuenta
+            <span class="caret"></span>
+          </a>
+            <ul class="dropdown-menu">
+              <li><a href="/sessions/new">Ingresar</a></li>
+              <li class="divider"></li>
+              <li><a href="/users/new">Registrarse</a></li>
+            </ul>
+
+            <% } %>
+
         </div>
         <div class="nav-collapse">
           <ul class="nav">
