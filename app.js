@@ -19,10 +19,22 @@ app.routes = routes = require('./routes')(app, models);
 app.listen(process.env.PORT || 3000);
 console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
 
+app.helpers({ renderScriptTags: function(scripts) {
+  return scripts.map(function(script) {
+    return '<script src="/js/' + script + '"></script>';
+  }).join('\n ');
+}});
+
 app.dynamicHelpers({
     session: function (req, res) {
         return req.session;
     }
+});
+
+app.dynamicHelpers({
+  scripts: function(req, res){
+    return ['jquery.js','bootstrap.js','flash.js', 'json2.js']; //this will be available in all views
+  }
 });
 
 var serverTCP = require('./core');

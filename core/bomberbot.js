@@ -10,7 +10,7 @@ var validActions=['N','E','S','O','P','BN','BE','BS','BO'];
 
 var models = require("./models.js");
 
-(function bomberbot(){
+(function bomberbot(db){
   "use strict"
   var net = require("net");
   var playersConnected =[];
