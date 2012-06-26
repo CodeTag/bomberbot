@@ -1,9 +1,9 @@
 
-app.get('/', app.util.loadUser, function(req, res){
+app.get('/', function(req, res){
+  console.log(app)
   res.render('index', {
                       layout: true, 
-                      title: 'AI Challenge - Bomberbot',
-                      locals: {username: req.currentUser.get('username')}
+                      title: 'AI Challenge - Bomberbot'
                       });
 });
 app.get('/howto', function(req, res){
