@@ -10,14 +10,17 @@ app.post('/users.:format?', function(req, res) {
   var user = new app.models.User(req.body.user);
 
   function userSaveFailed() {
+    console.log('Account creation failed');
     req.flash('error', 'Account creation failed');
     res.render('users/new.ejs', {
-      locals: { user: user }
+      locals: { user: user },
+      layout: true, title: 'AI Challenge - Bomberbot - Ingreso'
     });
   }
 
   user.save(function(err) {
     if (err) {
+      console.log(err)
       return userSaveFailed();
     } 
 

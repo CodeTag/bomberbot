@@ -7,7 +7,9 @@ app.get('/sessions/new', function(req, res) {
 });
 
 app.post('/sessions', function(req, res) {
-  app.models.User.findOne({ email: req.body.user.email }, function(err, user) {
+  console.log(app.db.model('User'));
+  console.log(app.models.User);
+  app.db.model('User').findOne({ email: req.body.user.email }, function(err, user) {
     if (user && user.authenticate(req.body.user.password)) {
       req.session.user_id = user.id;
 
@@ -16,12 +18,13 @@ app.post('/sessions', function(req, res) {
         var loginToken = new app.models.LoginToken({ email: user.email });
         loginToken.save(function() {
           res.cookie('logintoken', loginToken.cookieValue, { expires: new Date(Date.now() + 2 * 604800000), path: '/' });
-          res.redirect('/documents');
+          res.redirect('/');
         });
       } else {
-        res.redirect('/documents');
+        res.redirect('/');
       }
     } else {
+      console.log('Incorrect Credentials');
       req.flash('error', 'Incorrect credentials');
       res.redirect('/sessions/new');
     }

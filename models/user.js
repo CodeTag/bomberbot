@@ -50,5 +50,8 @@ module.exports = function(mongoose) {
     }
   });
 
-  return mongoose.model(collection, User);
+  var test=mongoose.model(collection, User);
+  console.log(test);
+  return test;
+  // return mongoose.model(collection, User);
 };
