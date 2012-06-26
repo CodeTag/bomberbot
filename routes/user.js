@@ -13,7 +13,7 @@ app.post('/users.:format?', function(req, res) {
     console.log('Account creation failed');
     req.flash('error', 'Account creation failed');
     res.render('users/new.ejs', {
-      locals: { user: user },
+      locals: { user: user, username: req.currentUser.get('username') },
       layout: true, title: 'AI Challenge - Bomberbot - Ingreso'
     });
   }
