@@ -59,7 +59,10 @@ var models = require("./models.js");
   };
 
   var server = net.createServer( function(socket){
-    socket.write("*******************************************************************************\n"+
+    
+    socket.on("connect", function(){
+      asignarId(socket);
+      socket.write("*******************************************************************************\n"+
                  "**       _______             _______                                         **\n"+
                  "**      |@|@|@|@|           |@|@|@|@|    Campus Party Colombia 2012          **\n"+
                  "**      |@|@|@|@|   _____   |@|@|@|@|    Torneo de IA con Bots               **\n"+
@@ -77,10 +80,8 @@ var models = require("./models.js");
                  "**          /_====_\\     /_====_\\                                            **\n"+
                  "**                                                                           **\n"+
                  "**                                                                           **\n"+
-                 "*******************************************************************************\n");
-    socket.on("connect", function(){
-      asignarId(socket);
-      socket.write("Ingrese usuario y token:\r\n");
+                 "*******************************************************************************\n"+
+                 "Ingrese usuario y token:\r\n");
       socket.status=STATUS_UNKNOW;
     });
 
