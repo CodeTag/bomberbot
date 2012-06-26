@@ -1,14 +1,14 @@
 var tipos= ['c','d','r','t'];
 var colores= ['a','b','f','m','n','r','v'];
 var ctx=undefined;
-var size=80;
+var size=45;
 var MOVF=30;
 var turno=0;
 var sizeBomb=50;
 
 var xBombAnimationFrame=0;
 var contAnimation=0;
-var bombAnimation = [0,1,2,3];
+var bombAnimation = [0,1,2,1];
 
 var tempVelocidad=MOVF;
 var cambiarVelocidad= function(velocidad){
@@ -22,7 +22,7 @@ var crearRandomRobot = function(){
 };
 
 
-var mapaSource="XXXXX\nXA_BX\nX___X\nXLLLX\nX_3_X\nXC_DX\nXXXXX-XXXXX\nXA__X\nX__BX\nXLLLX\nX_2DX\nXC__X\nXXXXX-XXXXX\nX3_BX\nXA__X\nXLLLX\nX_1_X\nXC_DX\nXXXXX-XXXXX\nX2B_X\nXA__X\nXL#LX\nX###X\nXC#DX\nXXXXX-XXXXX\nX1B_X\nX_A_X\nXL_LX\nX___X\nX_CDX\nXXXXX-XXXXX\nX##BX\nX#A_X\nXL_LX\nX__DX\nXC__X\nXXXXX-XXXXX\nX__BX\nXA__X\nXL_LX\nX_D3X\nX3C_X\nXXXXX-XXXXX\nX__BX\nXA__X\nXL_LX\nX_D2X\nX2_CX\nXXXXX-XXXXX\nX__BX\nXA__X\nXLDLX\nX__1X\nX1_CX\nXXXXX-XXXXX\nX__BX\nXAD_X\nXL_#X\nX###X\nX###X\nXXXXX-XXXXX\nX__BX\nXAD_X\nXL__X\nX___X\nX___X\nXXXXX";
+var mapaSource="XXXXXXXXXXX\nXA_BX\nX___X\nXLLLX\nX_3_X\nXC_DX\nXXXXX-XXXXX\nXA__X\nX__BX\nXLLLX\nX_2DX\nXC__X\nXXXXX-XXXXX\nX3_BX\nXA__X\nXLLLX\nX_1_X\nXC_DX\nXXXXX-XXXXX\nX2B_X\nXA__X\nXL#LX\nX###X\nXC#DX\nXXXXX-XXXXX\nX1B_X\nX_A_X\nXL_LX\nX___X\nX_CDX\nXXXXX-XXXXX\nX##BX\nX#A_X\nXL_LX\nX__DX\nXC__X\nXXXXX-XXXXX\nX__BX\nXA__X\nXL_LX\nX_D3X\nX3C_X\nXXXXX-XXXXX\nX__BX\nXA__X\nXL_LX\nX_D2X\nX2_CX\nXXXXX-XXXXX\nX__BX\nXA__X\nXLDLX\nX__1X\nX1_CX\nXXXXX-XXXXX\nX__BX\nXAD_X\nXL_#X\nX###X\nX###X\nXXXXX-XXXXXXXXXXX\nX__BX\nXAD_X\nXL__X\nX___X\nX___X\nXXXXX\nXXXXX\nXXXXX\nXXXXX\nXXXXXXXXXXX";
 
 var ancho=0;
 var alto=0;
@@ -57,7 +57,7 @@ window.onload= function(){
         var cont=0;
         ctx.beginPath();
         ctx.fillStyle="#000";
-        ctx.rect(0, 0, 700, 700);
+        ctx.rect(0, 0, 520, 700);
         ctx.fill();
         while(cont<mapa.length){
             switch(mapa[cont]){
@@ -94,27 +94,27 @@ window.onload= function(){
     var pintarStatus = function(){
         ctx.beginPath();
         ctx.fillStyle="#000";
-        ctx.rect(700, 0, 150, 700);
+        ctx.rect(520, 0, 150, 700);
         ctx.fill();
         ctx.fillStyle="#FFF";
-        ctx.fillText("Turno "+turno,750,50);
+        ctx.fillText("Turno "+turno,570,50);
         
         
-        ctx.drawImage(bot1.sprite,0,0,50,75,750,70,20,30);
-        ctx.fillText(bot1.nombre,710,85);
-        ctx.fillText(bot1.getAccion(),800,85);
+        ctx.drawImage(bot1.sprite,0,0,50,75,570,70,20,30);
+        ctx.fillText(bot1.nombre,530,85);
+        ctx.fillText(bot1.getAccion(),620,85);
         
-        ctx.drawImage(bot2.sprite,0,0,50,75,750,120,20,30);
-        ctx.fillText(bot2.nombre,710,135);
-        ctx.fillText(bot2.getAccion(),800,135);
+        ctx.drawImage(bot2.sprite,0,0,50,75,570,120,20,30);
+        ctx.fillText(bot2.nombre,530,135);
+        ctx.fillText(bot2.getAccion(),620,135);
         
-        ctx.drawImage(bot3.sprite,0,0,50,75,750,170,20,30);
-        ctx.fillText(bot3.nombre,710,185);
-        ctx.fillText(bot3.getAccion(),800,185);
+        ctx.drawImage(bot3.sprite,0,0,50,75,570,170,20,30);
+        ctx.fillText(bot3.nombre,530,185);
+        ctx.fillText(bot3.getAccion(),620,185);
         
-        ctx.drawImage(bot4.sprite,0,0,50,75,750,220,20,30);
-        ctx.fillText(bot4.nombre,710,220);
-        ctx.fillText(bot4.getAccion(),800,235); 
+        ctx.drawImage(bot4.sprite,0,0,50,75,570,220,20,30);
+        ctx.fillText(bot4.nombre,530,220);
+        ctx.fillText(bot4.getAccion(),620,235); 
         ctx.stroke();
     }
     

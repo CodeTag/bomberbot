@@ -16,6 +16,20 @@ app.db = db = app.mongoose.connect(app.set('db-uri'));
 
 app.routes = routes = require('./routes')(app, models);
 
+
+app.helpers({ renderScriptTags: function(scripts) {
+  return scripts.map(function(script) {
+    return '<script src="/js/' + script + '"></script>';
+  }).join('\n ');
+}});
+
+app.dynamicHelpers({
+  scripts: function(req, res){
+    return ['jquery.js','bootstrap.js','flash.js']; //this will be available in all views
+  }
+});
+
+
 app.listen(process.env.PORT || 3000);
 console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
 
