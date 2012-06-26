@@ -33,10 +33,13 @@ var models = require("./models.js");
       socket.pow=1;
       socket.limitBombs=1;
       socket.contBombs=0;
-      socket.points=0;
-      socket.token= token;
+      socket.points=0;//puntos por partida
+      socket.totalPrueba=0;//puntos totales en pruebas
+      socket.totalProduccion=0;//puntos totales en produccion
+      socket.token= token;//validando 
       socket.status=STATUS_WAITING;
       socket.partidasJugadas=0;//cargar informacion de la base de datos
+
       playersConnected.push(socket);
       console.log(usuario+" conectado");
     };
@@ -47,6 +50,10 @@ var models = require("./models.js");
       }else{//no es una accion valida
 
       }
+    };
+    socket.addPuntos=function addPuntos(points){
+      socket.totalPrueba+=points;
+      //socket.totalProduccion+=points;
     };
 
   };
@@ -225,8 +232,18 @@ var models = require("./models.js");
       finalizoPartida=true;
       console.timeEnd('duracion partida');
       console.log("puntuacion total: ");
+      partida.sort(function(a, b){return a.points-b.points});
       for(i in partida){
         console.log(partida[i].ficha+" "+ partida[i].user+" puntos: "+partida[i].points);
+        if(i==0){
+          partida[i].addPuntos(1);
+        }else if(i==1){
+          partida[i].addPuntos(2);
+        }else if(i==2){
+          partida[i].addPuntos(3);
+        }else if(i==3){
+          partida[i].addPuntos(5);
+        }
         partida[i].status=STATUS_WAITING;
       }
       setTimeout(crearPartida,FREEZE_TIME);
@@ -248,7 +265,7 @@ var models = require("./models.js");
       partida = [];//almacena los jugadores asociandolos por el id
       partida.lista=[];//ids de jugadores en esta partida
       partida.jugadores=4;
-      playersConnected=playersConnected.sort(function(a, b){
+      playersConnected.sort(function(a, b){
         return a.partidasJugadas-b.partidasJugadas
       });
       console.log("players connected "+playersConnected.length);
