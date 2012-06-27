@@ -18,6 +18,9 @@ exports.bomberbot=function bomberbot(app){
 
   var controller = new models.gameController();
 
+  //inicializar sockets
+  app.models.User.update({}, {connected:false},{},function(err){console.log("se user "+err)});
+
   var asignarId = function(socket){
     
     socket.id= ++id;
@@ -25,23 +28,34 @@ exports.bomberbot=function bomberbot(app){
     socket.fault=0;
 
     socket.login = function login(usuario, token){
-      //autenticar usuario
-      socket.user= usuario;//validar y asociar
-      socket.ficha=undefined;
-      socket.xIndex=undefined;
-      socket.yIndex=undefined;
-      socket.pow=1;
-      socket.limitBombs=1;
-      socket.contBombs=0;
-      socket.points=0;//puntos por partida
-      socket.totalPrueba=0;//puntos totales en pruebas
-      socket.totalProduccion=0;//puntos totales en produccion
-      socket.token= token;//validando 
-      socket.status=STATUS_WAITING;
-      socket.partidasJugadas=0;//cargar informacion de la base de datos
+        var a=app.models.User.findOne({username:usuario, _id:token},function(err, user){
+        if(!user){
+          socket.end("Usuario && token no validos\r\n");
+        }else if (user.connected){
+          socket.end("Usuario ya esta conectado.\r\n");
+        }
+        app.models.User.update({_id:token}, {connected:true},{},function(err){console.log("se user "+err)});
+        console.log(user);
+        //autenticar usuario
+        socket.user= usuario;//validar y asociar
+        socket.ficha=undefined;
+        socket.xIndex=undefined;
+        socket.yIndex=undefined;
+        socket.pow=1;
+        socket.limitBombs=1;
+        socket.contBombs=0;
+        socket.points=0;//puntos por partida
+        socket.token= token;//validando 
+        socket.status=STATUS_WAITING;
 
-      playersConnected.push(socket);
-      console.log(usuario+" conectado");
+        //cargar de la base de datos        
+        socket.totalPrueba=0;//puntos totales en pruebas
+        socket.totalProduccion=0;//puntos totales en produccion
+        socket.partidasJugadas=0;//cargar informacion de la base de datos
+
+        playersConnected.push(socket);
+        console.log(usuario+" conectado");
+      });
     };
 
     socket.jugar = function jugar(accion){
@@ -134,8 +148,10 @@ exports.bomberbot=function bomberbot(app){
       if(index!=-1){
         playersConnected.splice(index,1);  
       }
+      app.models.User.update({_id:socket.token}, {connected:false},{},function(err){console.log("se user "+err)});
+      socket.end("se ha desconectado por inactividad");
     });
-    socket.on("error", function(){
+    socket.on("error",function(){
       if(socket.status== STATUS_PLAYING){
         controller.eliminarJugador(socket);  
         socket.points+=-15;
@@ -152,6 +168,8 @@ exports.bomberbot=function bomberbot(app){
       if(index!=-1){
         playersConnected.splice(index,1);  
       }
+      app.models.User.update({_id:socket.token}, {connected:false},{},function(err){console.log("se user "+err)});
+      socket.end("se ha desconectado por inactividad");
     });
     socket.on("close", function(){
       if(socket.status== STATUS_PLAYING){
@@ -170,8 +188,10 @@ exports.bomberbot=function bomberbot(app){
       if(index!=-1){
         playersConnected.splice(index,1);  
       }
+      app.models.User.update({_id:socket.token}, {connected:false},{},function(err){console.log("se user "+err)});
+      socket.end("se ha desconectado por inactividad");
     });
-    socket.on("timeout", function(){
+    socket.on("timeout",function(){
       if(socket.status== STATUS_PLAYING){
         controller.eliminarJugador(socket);  
         socket.points+=-15;
@@ -188,6 +208,7 @@ exports.bomberbot=function bomberbot(app){
       if(index!=-1){
         playersConnected.splice(index,1);  
       }
+      app.models.User.update({_id:socket.token}, {connected:false},{},function(err){console.log("se user "+err)});
       socket.end("se ha desconectado por inactividad");
     });
   });
@@ -265,8 +286,8 @@ exports.bomberbot=function bomberbot(app){
         console.log("turno "+turno)
       }
       console.log("este fue el juego: "+partidaStr);
-      var partidaModel = new app.models.Partida({ logPartida: partidaStr.toString(),id:0 });
-      partidaModel.save();
+      var partidaModel = new app.models.Partida({ logPartida: partidaStr.toString()});
+      partidaModel.save(function(err){console.log("se putio "+err)});
       console.log("se guardo")
 
       setTimeout(crearPartida,FREEZE_TIME);
