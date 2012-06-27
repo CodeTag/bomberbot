@@ -14,7 +14,8 @@ module.exports = function(mongoose) {
   User = new Schema({
     'email': { type: String, validate: [validatePresenceOf, 'an email is required'], index: { unique: true } },
     'hashed_password': String,
-    'salt': String
+    'salt': String,
+    'connected': {type: Boolean, default: false}
   });
 
   User.virtual('id')
@@ -41,7 +42,7 @@ module.exports = function(mongoose) {
   User.method('encryptPassword', function(password) {
     return crypto.createHmac('sha1', this.salt).update(password).digest('hex');
   });
-
+/**
   User.pre('save', function(next) {
     if (!validatePresenceOf(this.password)) {
       next(new Error('Invalid password'));
@@ -49,6 +50,6 @@ module.exports = function(mongoose) {
       next();
     }
   });
-
+*/
   return mongoose.model(collection, User);
 };

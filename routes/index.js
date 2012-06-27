@@ -1,15 +1,44 @@
 
 app.get('/', function(req, res){
 
-  models.Partida.find( {}, function (err, found) {
-  	console.log(found.length); // '****-****-****-1234'
-  	console.log(found[0].logPartida); // '****-****-****-1234'
-  	res.render('index', {
-                      layout: true, 
-                      title: 'AI Challenge - Bomberbot', 
-                      partidaCargada: found[0].logPartida
-                      });
-  });
+  models.Partida.find({}).sort('fecha',-1).execFind(
+  	function (err, found) {
+  		console.log("entro");
+	  	if(err){
+	  		console.log("error "+err);
+	  	}
+	  	
+
+	  	models.User.find({$or:[{_id:found[0].jugadorA},
+	  						   {_id:found[0].jugadorB},
+	  						   {_id:found[0].jugadorC},
+	  						   {_id:found[0].jugadorD}]},
+	  						   function(err, dbuser){
+	  							for(var i in dbuser){
+	  								if(found[0].jugadorA==dbuser[i]._id){
+	  									found[0].jugadorA= dbuser[i].get("username");
+	  								}else if(found[0].jugadorB==dbuser[i]._id){
+	  									found[0].jugadorB= dbuser[i].get("username");
+	  								}else if(found[0].jugadorC==dbuser[i]._id){
+	  									found[0].jugadorC= dbuser[i].get("username");
+	  								}else if(found[0].jugadorD==dbuser[i]._id){
+	  									found[0].jugadorD= dbuser[i].get("username");
+	  								}
+	  							}
+	  							
+							  	res.render('index', {
+						                      layout: true, 
+						                      title: 'AI Challenge - Bomberbot', 
+						                      partidaCargada: found[0].logPartida,
+						                      jugadorA:found[0].jugadorA,
+						                      jugadorB:found[0].jugadorB,
+						                      jugadorC:found[0].jugadorC,
+						                      jugadorD:found[0].jugadorD
+		                      	});
+			});
+
+							  	
+  		});
   
 });
 app.get('/howto', function(req, res){
