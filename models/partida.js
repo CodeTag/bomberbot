@@ -8,13 +8,15 @@ module.exports = function(mongoose) {
     *
     * partidas jugadas.
     */
+    //
   console.log(mongoose.models);
-//jugadores: [mongoose.model("User").schema],
   Partida = new Schema({
-    
-    logPartida: { type: String, index: false },
     fecha: { type: Date, index: true, default: Date.now },
-    id:{type: Number, index:true}
+    jugadorA: {type:String, index:false},
+    jugadorB: {type:String, index:false},
+    jugadorC: {type:String, index:false},
+    jugadorD: {type:String, index:false},
+    logPartida: { type: String, index: false }
   });
   return mongoose.model(collection, Partida);
 };

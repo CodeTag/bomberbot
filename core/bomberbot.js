@@ -19,7 +19,7 @@ exports.bomberbot=function bomberbot(app){
   var controller = new models.gameController();
 
   //inicializar sockets
-  app.models.User.update({}, {connected:false},{},function(err){console.log("se user "+err)});
+  app.models.User.update({}, {connected:false},{ multi: true },function(err){console.log("error updating "+err)});
 
   var asignarId = function(socket){
     
@@ -28,14 +28,15 @@ exports.bomberbot=function bomberbot(app){
     socket.fault=0;
 
     socket.login = function login(usuario, token){
-        var a=app.models.User.findOne({username:usuario, _id:token},function(err, user){
-        if(!user){
+      app.models.User.findOne({username:usuario, _id:token},function(err, dbuser){
+        if(!dbuser){
           socket.end("Usuario && token no validos\r\n");
-        }else if (user.connected){
+          return;
+        }else if (dbuser.connected){
           socket.end("Usuario ya esta conectado.\r\n");
+          return;
         }
-        app.models.User.update({_id:token}, {connected:true},{},function(err){console.log("se user "+err)});
-        console.log(user);
+        app.models.User.update({_id:token}, {connected:true},{},function(err){console.log("error updating "+err);});
         //autenticar usuario
         socket.user= usuario;//validar y asociar
         socket.ficha=undefined;
@@ -47,7 +48,7 @@ exports.bomberbot=function bomberbot(app){
         socket.points=0;//puntos por partida
         socket.token= token;//validando 
         socket.status=STATUS_WAITING;
-
+        socket.dbuser= dbuser;
         //cargar de la base de datos        
         socket.totalPrueba=0;//puntos totales en pruebas
         socket.totalProduccion=0;//puntos totales en produccion
@@ -107,7 +108,7 @@ exports.bomberbot=function bomberbot(app){
         break;
 
         case STATUS_WAITING:
-          console.log(socket.user + " mientras waiting "+info[0]);
+          //console.log(socket.user + " mientras waiting "+info[0]);
           if(info[0]=="salir"){
             socket.end("hasta luego mano");
           }
@@ -148,7 +149,7 @@ exports.bomberbot=function bomberbot(app){
       if(index!=-1){
         playersConnected.splice(index,1);  
       }
-      app.models.User.update({_id:socket.token}, {connected:false},{},function(err){console.log("se user "+err)});
+      app.models.User.update({_id:socket.token}, {connected:false},{},function(err){console.log("error updating user "+err)});
       socket.end("se ha desconectado por inactividad");
     });
     socket.on("error",function(){
@@ -168,7 +169,7 @@ exports.bomberbot=function bomberbot(app){
       if(index!=-1){
         playersConnected.splice(index,1);  
       }
-      app.models.User.update({_id:socket.token}, {connected:false},{},function(err){console.log("se user "+err)});
+      app.models.User.update({_id:socket.token}, {connected:false},{},function(err){console.log("error updating user "+err)});
       socket.end("se ha desconectado por inactividad");
     });
     socket.on("close", function(){
@@ -188,7 +189,7 @@ exports.bomberbot=function bomberbot(app){
       if(index!=-1){
         playersConnected.splice(index,1);  
       }
-      app.models.User.update({_id:socket.token}, {connected:false},{},function(err){console.log("se user "+err)});
+      app.models.User.update({_id:socket.token}, {connected:false},{},function(err){console.log("error updating user "+err)});
       socket.end("se ha desconectado por inactividad");
     });
     socket.on("timeout",function(){
@@ -208,7 +209,7 @@ exports.bomberbot=function bomberbot(app){
       if(index!=-1){
         playersConnected.splice(index,1);  
       }
-      app.models.User.update({_id:socket.token}, {connected:false},{},function(err){console.log("se user "+err)});
+      app.models.User.update({_id:socket.token}, {connected:false},{},function(err){console.log("error updating user "+err)});
       socket.end("se ha desconectado por inactividad");
     });
   });
@@ -230,10 +231,10 @@ exports.bomberbot=function bomberbot(app){
     }
     //algun procesamiento
     controller.actualizarMapa();
-    console.log("\n--"+turno+"--");
+    //console.log("\n--"+turno+"--");
     var map= controller.getMapa();
-    console.log(map);
-    console.log("----");
+    //console.log(map);
+    //console.log("----");
     for(var i=partida.jugadores-1; i>=0;i--){
         var player = partida[partida.lista[i]];
         if(player.status==STATUS_WAITING){
@@ -272,7 +273,7 @@ exports.bomberbot=function bomberbot(app){
         }
         partida[i].status=STATUS_WAITING;
       }
-      console.log("alllll");
+      //console.log("alllll");
       //guardar log de partida 
       
       var partidaStr="";
@@ -283,11 +284,16 @@ exports.bomberbot=function bomberbot(app){
         if(t<partida.juego.length-1){
           partidaStr+="-";
         }
-        console.log("turno "+turno)
+        //console.log("turno "+turno)
       }
-      console.log("este fue el juego: "+partidaStr);
-      var partidaModel = new app.models.Partida({ logPartida: partidaStr.toString()});
-      partidaModel.save(function(err){console.log("se putio "+err)});
+      //console.log("este fue el juego: "+partidaStr);
+
+      var partidaModel = new app.models.Partida({ logPartida: partidaStr.toString(),
+                                                  jugadorA:partida[0].token,
+                                                  jugadorB:partida[1].token,
+                                                  jugadorC:partida[2].token,
+                                                  jugadorD:partida[3].token});
+      partidaModel.save(function(err){console.log("error saving putio "+err)});
       console.log("se guardo")
 
       setTimeout(crearPartida,FREEZE_TIME);
