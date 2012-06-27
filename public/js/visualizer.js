@@ -22,8 +22,12 @@ var crearRandomRobot = function(){
 };
 
 
-var mapaSource="XXXXXXXXXXX\nXA_BX\nX___X\nXLLLX\nX_3_X\nXC_DX\nXXXXX-XXXXX\nXA__X\nX__BX\nXLLLX\nX_2DX\nXC__X\nXXXXX-XXXXX\nX3_BX\nXA__X\nXLLLX\nX_1_X\nXC_DX\nXXXXX-XXXXX\nX2B_X\nXA__X\nXL#LX\nX###X\nXC#DX\nXXXXX-XXXXX\nX1B_X\nX_A_X\nXL_LX\nX___X\nX_CDX\nXXXXX-XXXXX\nX##BX\nX#A_X\nXL_LX\nX__DX\nXC__X\nXXXXX-XXXXX\nX__BX\nXA__X\nXL_LX\nX_D3X\nX3C_X\nXXXXX-XXXXX\nX__BX\nXA__X\nXL_LX\nX_D2X\nX2_CX\nXXXXX-XXXXX\nX__BX\nXA__X\nXLDLX\nX__1X\nX1_CX\nXXXXX-XXXXX\nX__BX\nXAD_X\nXL_#X\nX###X\nX###X\nXXXXX-XXXXXXXXXXX\nX__BX\nXAD_X\nXL__X\nX___X\nX___X\nXXXXX\nXXXXX\nXXXXX\nXXXXX\nXXXXXXXXXXX";
+//var mapaSource="XXXXXXXXXXX\nXA_BX\nX___X\nXLLLX\nX_3_X\nXC_DX\nXXXXX-XXXXX\nXA__X\nX__BX\nXLLLX\nX_2DX\nXC__X\nXXXXX-XXXXX\nX3_BX\nXA__X\nXLLLX\nX_1_X\nXC_DX\nXXXXX-XXXXX\nX2B_X\nXA__X\nXL#LX\nX###X\nXC#DX\nXXXXX-XXXXX\nX1B_X\nX_A_X\nXL_LX\nX___X\nX_CDX\nXXXXX-XXXXX\nX##BX\nX#A_X\nXL_LX\nX__DX\nXC__X\nXXXXX-XXXXX\nX__BX\nXA__X\nXL_LX\nX_D3X\nX3C_X\nXXXXX-XXXXX\nX__BX\nXA__X\nXL_LX\nX_D2X\nX2_CX\nXXXXX-XXXXX\nX__BX\nXA__X\nXLDLX\nX__1X\nX1_CX\nXXXXX-XXXXX\nX__BX\nXAD_X\nXL_#X\nX###X\nX###X\nXXXXX-XXXXXXXXXXX\nX__BX\nXAD_X\nXL__X\nX___X\nX___X\nXXXXX\nXXXXX\nXXXXX\nXXXXX\nXXXXXXXXXXX";
+var $a = $("#mapa");
+var mapaSource=$a.data("gio");
+mapaSource=mapaSource.replace(/,/g,"");
 
+console.log("mapa "+mapaSource)
 var ancho=0;
 var alto=0;
 window.onload= function(){
@@ -44,6 +48,10 @@ window.onload= function(){
 
         var fuego = new Image();
         fuego.src = "img/spritefuego.png";
+        var poderbomba = new Image();
+        poderbomba.src = "img/PoderBomba.png";
+        var poderpow = new Image();
+        poderpow.src = "img/PoderFlama.png";
         
         var bot1 = new Bot("bot1",crearRandomRobot(),-1,-1);
         var bot2 = new Bot("bot2",crearRandomRobot(),-1,-1);
@@ -77,7 +85,15 @@ window.onload= function(){
                     ctx.drawImage(fuego, sizeBomb*0,0,sizeBomb, sizeBomb,10+i*size, 10+j*size,size,size);
                     i++;
                 break;
-                case 'A':case 'B':case 'C':case 'D':
+                case 'V':
+                    ctx.drawImage(poderbomba, sizeBomb*0,0,sizeBomb, sizeBomb,10+i*size, 10+j*size,size,size);
+                    i++;
+                break;
+                case 'P':
+                    ctx.drawImage(poderpow, sizeBomb*0,0,sizeBomb, sizeBomb,10+i*size, 10+j*size,size,size);
+                    i++;
+                break;
+                case 'A':case 'B':case 'C':case 'D':case 'a':case 'b':case 'c':case 'd':
                 case '_':
                     i++;
                 break;
@@ -225,19 +241,19 @@ window.onload= function(){
                     j++;
                     i=0;
                 break;
-                case 'A':
+                case 'A':case 'a':
                     bot1.actualizarCoordenadas(i,j);
                     i++;
                 break;
-                case 'B':
+                case 'B':case 'b':
                     bot2.actualizarCoordenadas(i,j);
                     i++;
                     break;
-                case 'C':
+                case 'C':case 'c':
                     bot3.actualizarCoordenadas(i,j);
                     i++;
                     break;
-                case 'D':
+                case 'D':case 'd':
                     bot4.actualizarCoordenadas(i,j);
                     i++;
                     break;

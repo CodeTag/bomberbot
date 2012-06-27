@@ -38,3 +38,4 @@ app.dynamicHelpers({
 });
 
 var serverTCP = require('./core');
+serverTCP.bomberbot(app);

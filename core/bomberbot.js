@@ -10,7 +10,7 @@ var validActions=['N','E','S','O','P','BN','BE','BS','BO'];
 
 var models = require("./models.js");
 
-(function bomberbot(db){
+exports.bomberbot=function bomberbot(app){
   "use strict"
   var net = require("net");
   var playersConnected =[];
@@ -254,17 +254,20 @@ var models = require("./models.js");
       console.log("alllll");
       //guardar log de partida 
       
-      var logPartida="";
+      var partidaStr="";
       var logFila="";
       var partidaTurno;
       for(var t=0;t<partida.juego.length;t++){
-        logPartida+=partida.juego[t];
+        partidaStr+=partida.juego[t];
         if(t<partida.juego.length-1){
-          logPartida+="-";
+          partidaStr+="-";
         }
         console.log("turno "+turno)
       }
-      console.log("este fue el juego: "+logPartida);
+      console.log("este fue el juego: "+partidaStr);
+      var partidaModel = new app.models.Partida({ logPartida: partidaStr.toString(),id:0 });
+      partidaModel.save();
+      console.log("se guardo")
 
       setTimeout(crearPartida,FREEZE_TIME);
     }else{
@@ -306,4 +309,4 @@ var models = require("./models.js");
 
   server.listen(5000);
   console.log("bomberbot server launched");
-})();
+};
