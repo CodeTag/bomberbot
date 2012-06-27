@@ -1,5 +1,50 @@
 <h2>IA - Torneo de programacion - Campus Party</h2>
+<br/>
+<br/>
 
 <div class="row-fluid">
- <%= currentUser %>
+  <div class="span5">
+    <label>Nombre:</label>
+  </div>
+  <div class="span2">
+  </div>
+  <div class="span5">
+    <p> <%= currentUser.get('fullname') %> </p>
+  </div>
 </div> 
+
+<div class="row-fluid">
+  <div class="span5">
+    <label>Usuario:</label>
+  </div>
+  <div class="span2">
+  </div>
+  <div class="span5">
+    <p> <%= currentUser.get('username') %> </p>
+  </div>
+</div> 
+
+<div class="row-fluid">
+  <div class="span5">
+    <label>Email:</label>
+  </div>
+  <div class="span2">
+  </div>
+  <div class="span5">
+    <p> <%= currentUser.email %> </p>
+  </div>
+</div> 
+
+<div class="row-fluid">
+  <div class="span5">
+    <label>Token:</label>
+  </div>
+  <div class="span2">
+  </div>
+  <div class="span5">
+    <p> <%= currentUser._id %>  </p>
+  </div>
+</div> 
+
+
+

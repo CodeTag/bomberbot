@@ -53,6 +53,7 @@
           <ul class="nav">
             <li class="active"><a href="/">Inicio</a></li>
             <li><a href="/Ranking">Ranking</a></li>
+            <% if(session.user){ %><li><a href="/users/profile">Perfil</a><li><% } %>
             <li><a href="/Competencia">Competencia</a></li>
             <li><a href="/Nosotros">Nosotros</a></li>
           </ul>
@@ -82,7 +83,7 @@
         </div><!--/.well -->
       </div><!--/span-->
       <div class="span9">
-        <div class="hero-unit">
+        <div class="well">
         <%- body %>
         </div>
       </div>

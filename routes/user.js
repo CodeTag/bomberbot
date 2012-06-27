@@ -7,7 +7,6 @@ app.get('/users/new', function(req, res) {
 });
 
 app.get('/users/profile', app.util.loadUser, function(req, res) {
-  console.log(req.currentUser);
   res.render('users/profile.ejs', {
     currentUser: req.currentUser,
     layout: true, title: 'AI Challenge - Bomberbot - Perfil'
