@@ -1,0 +1,20 @@
+<table class="table">
+  <thead>
+    <tr>
+      <th>Posicion</th>
+      <th>Usuario</th>
+      <th>Puntos</th>
+      <th>Partidas</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% users.forEach(function(user){ %>
+    <tr>
+      <td>1</td>
+      <td><%= user.username %></td>
+      <td><%= user.score %></td>
+      <td><%= user.plays %></td>
+    </tr>
+    <% }) %>
+  </tbody>
+</table>

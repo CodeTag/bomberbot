@@ -13,8 +13,11 @@ app.get('/', function(req, res){
   
 });
 app.get('/howto', function(req, res){
-  res.render('howto', {
-                      layout: true, 
-                      title: 'Howto AI Challenge - Bomberbot'
-                      });
+  res.render('howto', {layout: true, title: 'Howto AI Challenge - Bomberbot'});
+});
+app.get('/ranking', function(req, res){
+  res.render('ranking', 
+    {layout:true, title: 'Ranking AI Challenge - Bomberbot',
+    users:[{},{},{}, position=0]
+    });
 });
