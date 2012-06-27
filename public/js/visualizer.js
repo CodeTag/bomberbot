@@ -38,7 +38,7 @@ window.onload= function(){
     
     if(tablero.getContext) {
         ctx = tablero.getContext('2d');
-        ctx.font = '18px Calibri';
+        ctx.font = '13px Calibri';
         var bloque = new Image();
         bloque.src = "img/SolidoBloque50.png";
         var ladrillo = new Image();
@@ -53,10 +53,10 @@ window.onload= function(){
         var poderpow = new Image();
         poderpow.src = "img/PoderFlama.png";
         
-        var bot1 = new Bot("bot1",crearRandomRobot(),-1,-1);
-        var bot2 = new Bot("bot2",crearRandomRobot(),-1,-1);
-        var bot3 = new Bot("bot3",crearRandomRobot(),-1,-1);
-        var bot4 = new Bot("bot4",crearRandomRobot(),-1,-1);
+        var bot1 = new Bot($("#jugadorA").data("jugadora"),crearRandomRobot(),-1,-1);
+        var bot2 = new Bot($("#jugadorB").data("jugadorb"),crearRandomRobot(),-1,-1);
+        var bot3 = new Bot($("#jugadorC").data("jugadorc"),crearRandomRobot(),-1,-1);
+        var bot4 = new Bot($("#jugadorD").data("jugadord"),crearRandomRobot(),-1,-1);
     }
     
     var fondo = function(){
@@ -110,27 +110,27 @@ window.onload= function(){
     var pintarStatus = function(){
         ctx.beginPath();
         ctx.fillStyle="#000";
-        ctx.rect(520, 0, 150, 700);
+        ctx.rect(520, 0, 230, 700);
         ctx.fill();
         ctx.fillStyle="#FFF";
         ctx.fillText("Turno "+turno,570,50);
         
         
-        ctx.drawImage(bot1.sprite,0,0,50,75,570,70,20,30);
-        ctx.fillText(bot1.nombre,530,85);
-        ctx.fillText(bot1.getAccion(),620,85);
+        ctx.drawImage(bot1.sprite,0,0,50,75,520,70,20,30);
+        ctx.fillText(bot1.nombre,560,85);
+        ctx.fillText(bot1.getAccion(),680,85);
         
-        ctx.drawImage(bot2.sprite,0,0,50,75,570,120,20,30);
-        ctx.fillText(bot2.nombre,530,135);
-        ctx.fillText(bot2.getAccion(),620,135);
+        ctx.drawImage(bot2.sprite,0,0,50,75,520,120,20,30);
+        ctx.fillText(bot2.nombre,560,135);
+        ctx.fillText(bot2.getAccion(),680,135);
         
-        ctx.drawImage(bot3.sprite,0,0,50,75,570,170,20,30);
-        ctx.fillText(bot3.nombre,530,185);
-        ctx.fillText(bot3.getAccion(),620,185);
+        ctx.drawImage(bot3.sprite,0,0,50,75,520,170,20,30);
+        ctx.fillText(bot3.nombre,560,185);
+        ctx.fillText(bot3.getAccion(),680,185);
         
-        ctx.drawImage(bot4.sprite,0,0,50,75,570,220,20,30);
-        ctx.fillText(bot4.nombre,530,220);
-        ctx.fillText(bot4.getAccion(),620,235); 
+        ctx.drawImage(bot4.sprite,0,0,50,75,520,220,20,30);
+        ctx.fillText(bot4.nombre,560,220);
+        ctx.fillText(bot4.getAccion(),680,235); 
         ctx.stroke();
     }
     

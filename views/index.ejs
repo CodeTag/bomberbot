@@ -1,7 +1,7 @@
 <h2>IA - Torneo de programacion - Campus Party</h2>
 <br />
 <div class="row-fluid">
-  <canvas id="tablero" width="720px" height="540px" style="background-color:#000;" style="float:left;">
+  <canvas id="tablero" width="750px" height="540px" style="background-color:#000;" style="float:left;">
     <p>what kind of "modern" browser are you using??</p>
   </canvas>
 </div>
@@ -20,9 +20,10 @@
   <div class="span4">
     <h2>partida</h2>
     <p id="mapa" data-gio='<%= partidaCargada %>'>el mapa</p>
-    <p><%= partidaCargada.toString() %></p>
-    <p><%= partidaCargada["logPartida"] %></p>
-    <p><a class="btn" href="#">View details &raquo;</a></p>
+    <p id="jugadorA" data-jugadora='<%= jugadorA %>'></p>
+    <p id="jugadorB" data-jugadorb='<%= jugadorB %>'></p>
+    <p id="jugadorC" data-jugadorc='<%= jugadorC %>'></p>
+    <p id="jugadorD" data-jugadord='<%= jugadorD %>'></p>
   </div>
 </div>
 <%- scripts.push('bot.js') %>
