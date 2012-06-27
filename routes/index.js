@@ -15,13 +15,13 @@ app.get('/', function(req, res){
                          {_id:found[0].jugadorD}]},
                          function(err, dbuser){
                           for(var i in dbuser){
-                              if(found[0].jugadorA==dbuser[i]._id){
+                              if(found[0].jugadorA==dbuser[i].get("_id")){
                                   found[0].jugadorA= dbuser[i].get("username");
-                              }else if(found[0].jugadorB==dbuser[i]._id){
+                              }else if(found[0].jugadorB==dbuser[i].get("_id")){
                                   found[0].jugadorB= dbuser[i].get("username");
-                              }else if(found[0].jugadorC==dbuser[i]._id){
+                              }else if(found[0].jugadorC==dbuser[i].get("_id")){
                                   found[0].jugadorC= dbuser[i].get("username");
-                              }else if(found[0].jugadorD==dbuser[i]._id){
+                              }else if(found[0].jugadorD==dbuser[i].get("_id")){
                                   found[0].jugadorD= dbuser[i].get("username");
                               }
                           }
