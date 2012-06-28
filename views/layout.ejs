@@ -53,8 +53,9 @@
           <ul class="nav">
             <li class="active"><a href="/">Inicio</a></li>
             <li><a href="/Ranking">Ranking</a></li>
-            <% if(session.user){ %><li><a href="/users/profile">Perfil</a><li><% } %>
-            <li><a href="/Competencia">Competencia</a></li>
+            <% if(session.user){ %><li><a href="/users/profile">Perfil</a><li>
+            <li><a href="/users/games">Mis partidas</a></li><% } %>
+            
             <li><a href="/Nosotros">Nosotros</a></li>
           </ul>
         </div><!--/.nav-collapse -->

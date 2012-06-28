@@ -289,10 +289,10 @@ exports.bomberbot=function bomberbot(app){
       //console.log("este fue el juego: "+partidaStr);
 
       var partidaModel = new app.models.Partida({ logPartida: partidaStr.toString(),
-                                                  jugadorA:partida[0].token,
-                                                  jugadorB:partida[1].token,
-                                                  jugadorC:partida[2].token,
-                                                  jugadorD:partida[3].token});
+                                                  jugadorA:partida[0].user,
+                                                  jugadorB:partida[1].user,
+                                                  jugadorC:partida[2].user,
+                                                  jugadorD:partida[3].user});
       partidaModel.save(function(err){console.log("error saving putio "+err)});
       console.log("se guardo")
 

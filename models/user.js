@@ -13,6 +13,8 @@ module.exports = function(mongoose) {
 
   User = new Schema({
     'email': { type: String, validate: [validatePresenceOf, 'an email is required'], index: { unique: true } },
+    'username':{type: String, index:{unique:true}},
+    'fullname':{type: String, index: false},
     'hashed_password': String,
     'salt': String,
     'connected': {type: Boolean, default: false}

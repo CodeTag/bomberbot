@@ -9,7 +9,7 @@ var Bot = function(nombre, tipoRobot, xIndex, yIndex){
 	this.vivo=true;
 	
 	this.sprite.onload = function(){};
-	this.sprite.src = "img/bots/r"+tipoRobot+".png";
+	this.sprite.src = "/img/bots/r"+tipoRobot+".png";
 	
 	this.xAnimationFrame=0;
 	
