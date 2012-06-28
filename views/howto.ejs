@@ -49,8 +49,98 @@
 <div class="row-fluid" id="rules">
 
   <div class="span12" >
-    <h3>Reglas del concurso</h3>
-    
+    <h3>Como se participa</h3>
+    <p>Solo pueden participar por los premios los participantes del Campus Party Colombia 2012</p>
+    <p>Los participantes deber&aacute;n realizar un programa que juegue batalla bomberbot, siguiendo la logica de las partidas de
+    bomberman, la conexi&oacute;n se realiza por protocolo TCP y el bot conectado tiene los siguientes tres estados:
+    <br/>
+    <ol>
+      <li>En autenticaci&oacute;n;:<br/>
+        Primero debes iniciar la conexión con el servidor (host: bomberbot.com, puerto: 5000), el servidor te responderá con un mensaje de bienvenida y solicitará tu nombre de usuario y token:
+        <img src=""/>
+        (todos los mensajes enviados por el servidor finalizan con \r\n)
+        <br/>
+        Si no tienes nombre de usuario o token debes registrarte, iniciar sesión y entrar a perfil donde aparecen tus datos.
+        Una vez te conectes el servidor te pondra en estado espera.
+      </li>
+      <li>En espera:<br/>
+        El bot estará en espera hasta que sea asignado a una nueva partida. Cuando esto ocurra recibiras el siguiente mensaje: 
+        <br/><code>EMPEZO;(mapa);letra;\r\n</code>
+        <br/>
+        (mapa): es una representación escrita del mapa de bomberbot con la siguiente representación:
+        <ol>
+          <li>X: es un bloque que no se puede destruir con bombas.</li>
+          <li>#: es la llama de una explosión de bomba.</li>
+          <li>L: es un bloque que se puede destruir con bombas.</li>
+          <li>_: es un espacio vacio, en el que se pueden mover los bots y poner bombas</li>
+          <li>V: es un poder que aumenta en 1 el número máximo de bombas que puede poner un bot.</li>
+          <li>P: es un poder que aumenta en 1 el radio de explosión de bombas que puede poner un bot</li>
+          <li>A, B, C, D: cada letra representa un bot</li>
+          <li>3, 2, 1: es una cuenta regresiva de bombas, cuando un bot ponga una bomba el contador iniciará en 3 y cada turno
+          disminuira en 1 unidad, al llegar a 0 estallará</li>
+          <li>a, b, c, d: cuando un bot es destruido su letra cambia a minuscula en ese turno. luego desaparece.</li>
+        </ol>
+        ejemplo de mapa:
+        <br/>
+        <code>
+        X,X,X,X,X,X,X,X,X,X,X<br/>
+        X,_,B,C,_,D,_,_,#,_,X<br/>
+        X,_,_,_,X,_,X,#,#,#,X<br/>
+        X,A,_,2,L,L,_,_,#,_,X<br/>
+        X,_,X,L,X,L,X,_,X,_,X<br/>
+        X,_,V,L,L,L,L,_,L,_,X<br/>
+        X,_,X,L,X,L,X,L,X,_,X<br/>
+        X,_,P,L,L,L,L,L,L,_,X<br/>
+        X,_,L,L,X,L,X,L,L,_,X<br/>
+        X,_,_,_,_,_,_,_,_,_,X<br/>
+        X,X,X,X,X,X,X,X,X,X,X
+        </code>
+        <br/> cada fila del mapa esta separada por \n<br/>
+        Ejemplo de mensaje empezo:
+        <code>EMPEZO;X,X,X,X,X,X,X,X,X,X,X\n
+        X,_,B,C,_,D,_,_,#,_,X\n
+        X,_,_,_,X,_,X,#,#,#,X\n
+        X,A,_,2,L,L,_,_,#,_,X\n
+        X,_,X,L,X,L,X,_,X,_,X\n
+        X,_,V,L,L,L,L,_,L,_,X\n
+        X,_,X,L,X,L,X,L,X,_,X\n
+        X,_,P,L,L,L,L,L,L,_,X\n
+        X,_,L,L,X,L,X,L,L,_,X\n
+        X,_,_,_,_,_,_,_,_,_,X\n
+        X,X,X,X,X,X,X,X,X,X,X;A;\r\n
+        </code>
+      </li>
+      <li>Jugando:<br/>
+        Una vez recibas el mensaje de <strong>EMPEZO</strong>, los siguientes mensajes contendran la siguiente notación:
+        <br/><code>TURNO;(#turno);(mapa);\r\n</code><br/>
+        (#turno): es el número del turno que se esta jugando, el máximo número que se puede recibir es 200.<br/>
+        (mapa): es el mapa siguiendo la notación explicada en el punto anterior.
+        <br/><br/>
+        Si tu bot es destruido en algún turno, recibiras el siguiente mensaje:<br/>
+        <code>PERDIO;\r\n</code><br/>
+      </li>
+      <li>Enviando ordenes al servidor:<br/>
+        el servidor solo recibe dos tipos de mensaje:
+        <br/>cuando se autentica: <code>usuario,token\r\n</code>
+        <br/>cuando el bot esta jugando el servidor recibe una de las siguientes ordenes:
+          <ol>
+            <li>N: para mover el bot hacia arriba</li>
+            <li>E: para mover el bot hacia la derecha</li>
+            <li>S: para mover el bot hacia abajo</li>
+            <li>O: para mover el bot hacia la izquierda</li>
+            <li>BN: para colocar una bomba en la casilla de arriba</li>
+            <li>BE: para colocar una bomba en la casilla de la derecha</li>
+            <li>BS: para colocar una bomba en la casilla de abajo</li>
+            <li>BO: para colocar una bomba en la casilla de la izquiera</li>
+            <li>P: para no realizar ningún movimiento</li>
+          </ol>
+        <br/>el servidor tiene un tiempo de espera de un segundo para recibir ordenes de todos los bots que estan en juego.
+        <br/>si el mensaje no es enviado en ese tiempo sera tenido en cuenta para el siguiente turno.
+        <br/>si se envia mas de un mensaje por turno solo se tomara el primero y el segundo sera tomado en el siguiente turno. (asi que no lo desperdicies)
+      </li>
+    </ol>
+    </p>
+
   </div>
 </div> 
 <div class="row-fluid" id="tools">

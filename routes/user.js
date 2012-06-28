@@ -13,6 +13,26 @@ app.get('/users/profile', app.util.loadUser, function(req, res) {
   });
 });
 
+app.get('/users/games', app.util.loadUser, function(req, res){
+  console.log(req.currentUser);
+  console.log(req.currentUser.get("_id"));
+  models.Partida.find({$or:[{jugadorA:req.currentUser.get("username")},
+                         {jugadorB:req.currentUser.get("username")},
+                         {jugadorC:req.currentUser.get("username")},
+                         {jugadorD:req.currentUser.get("username")}]}).sort('fecha',-1).limit(10).execFind( function(err, listado){
+                          if(err){
+                            console.log("err "+err);
+                          }
+                          console.log("listado "+listado.length);
+                          res.render("users/games.ejs",{
+                            currentUser: req.currentUser,
+                            partidas: listado,
+                            layout:true, title:"AI Challenge - Bomberbot - Listado de partidas"
+                          });
+                          //res.send(listado);
+                     });
+});
+
 app.post('/users.:format?', function(req, res) {
   var user = new app.models.User(req.body.user);
 

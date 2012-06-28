@@ -1,7 +1,7 @@
 ﻿var STATUS_UNKNOW="unknow";
 var STATUS_WAITING="waiting";
 var STATUS_PLAYING="playing";
-var DURACION_TURNO=200;
+var DURACION_TURNO=1000;
 var MAX_TURNOS=200;
 var WIN_POINTS=25;
 var FREEZE_TIME=7000;
@@ -50,9 +50,9 @@ exports.bomberbot=function bomberbot(app){
         socket.status=STATUS_WAITING;
         socket.dbuser= dbuser;
         //cargar de la base de datos        
-        socket.totalPrueba=0;//puntos totales en pruebas
-        socket.totalProduccion=0;//puntos totales en produccion
-        socket.partidasJugadas=0;//cargar informacion de la base de datos
+        socket.totalPrueba=dbuser.get("totalPrueba")||0;//puntos totales en pruebas
+        socket.totalProduccion=dbuser.get("totalProduccion")||0;//puntos totales en produccion
+        socket.partidasJugadas=dbuser.get("partidasJugadas")||0;//cargar informacion de la base de datos
 
         playersConnected.push(socket);
         console.log(usuario+" conectado");
@@ -68,6 +68,11 @@ exports.bomberbot=function bomberbot(app){
     };
     socket.addPuntos=function addPuntos(points){
       socket.totalPrueba+=points;
+      if(socket.user=="agares" || socket.user=="julianvargasalvarez" || socket.user == "woakas" ||socket.user=="kuryaki"){
+        console.log("a ustedes no los puedo salvar");
+      }else{
+        app.models.User.update({_id:socket.token},{totalPrueba:socket.totalPrueba},{},function(err){console.log(""+err);});
+      }
       //socket.totalProduccion+=points;
     };
 
@@ -135,7 +140,7 @@ exports.bomberbot=function bomberbot(app){
     socket.on("end",function(){
       if(socket.status== STATUS_PLAYING){
         controller.eliminarJugador(socket);  
-        socket.points+=-15;
+        socket.addPuntos(-15);
       }
       if(partida.lista != undefined){
         var index= partida.lista.indexOf(socket.id);
@@ -155,7 +160,7 @@ exports.bomberbot=function bomberbot(app){
     socket.on("error",function(){
       if(socket.status== STATUS_PLAYING){
         controller.eliminarJugador(socket);  
-        socket.points+=-15;
+        socket.addPuntos(-15);
       }
       if(partida.lista != undefined){
         var index= partida.lista.indexOf(socket.id);
@@ -175,7 +180,7 @@ exports.bomberbot=function bomberbot(app){
     socket.on("close", function(){
       if(socket.status== STATUS_PLAYING){
         controller.eliminarJugador(socket);  
-        socket.points+=-15;
+        socket.addPuntos(-15);
       }
       if(partida.lista != undefined){
         var index= partida.lista.indexOf(socket.id);
@@ -195,7 +200,7 @@ exports.bomberbot=function bomberbot(app){
     socket.on("timeout",function(){
       if(socket.status== STATUS_PLAYING){
         controller.eliminarJugador(socket);  
-        socket.points+=-15;
+        socket.addPuntos(-15);
       }
       if(partida.lista != undefined){
         var index= partida.lista.indexOf(socket.id);
@@ -243,7 +248,8 @@ exports.bomberbot=function bomberbot(app){
           partida.jugadores--;
         }else{
           if(partida.jugadores==1){
-            player.points+=WIN_POINTS;
+            player.addPuntos(WIN_POINTS);
+            
             console.log(player.user+" "+player.ficha+" gano. total puntos: "+player.points);
             finalizoPartida=true;
           }
@@ -263,13 +269,13 @@ exports.bomberbot=function bomberbot(app){
       for(i in partida){
         console.log(partida[i].ficha+" "+ partida[i].user+" puntos: "+partida[i].points);
         if(i==0){
-          partida[i].addPuntos(1);
+          partida[i].addPuntos(partida[i].points);
         }else if(i==1){
-          partida[i].addPuntos(2);
+          partida[i].addPuntos(partida[i].points+5);
         }else if(i==2){
-          partida[i].addPuntos(3);
+          partida[i].addPuntos(partida[i].points+8);
         }else if(i==3){
-          partida[i].addPuntos(5);
+          partida[i].addPuntos(partida[i].points+13);
         }
         partida[i].status=STATUS_WAITING;
       }
@@ -289,10 +295,10 @@ exports.bomberbot=function bomberbot(app){
       //console.log("este fue el juego: "+partidaStr);
 
       var partidaModel = new app.models.Partida({ logPartida: partidaStr.toString(),
-                                                  jugadorA:partida[0].token,
-                                                  jugadorB:partida[1].token,
-                                                  jugadorC:partida[2].token,
-                                                  jugadorD:partida[3].token});
+                                                  jugadorA:partida[0].user,
+                                                  jugadorB:partida[1].user,
+                                                  jugadorC:partida[2].user,
+                                                  jugadorD:partida[3].user});
       partidaModel.save(function(err){console.log("error saving putio "+err)});
       console.log("se guardo")
 
@@ -324,6 +330,7 @@ exports.bomberbot=function bomberbot(app){
         partida[playersConnected[i].id]=playersConnected[i];
         partida.lista.push(playersConnected[i].id);
         controller.addPlayer(playersConnected[i]);
+        app.models.User.update({_id:playersConnected[i].token},{partidasJugadas:playersConnected[i].partidasJugadas+1},{},function(err){console.log(""+err);});
       }
       turno=0;
       finalizoPartida=false;

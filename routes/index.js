@@ -14,17 +14,6 @@ app.get('/', function(req, res){
                          {_id:found[0].jugadorC},
                          {_id:found[0].jugadorD}]},
                          function(err, dbuser){
-                          for(var i in dbuser){
-                              if(found[0].jugadorA==dbuser[i]._id){
-                                  found[0].jugadorA= dbuser[i].get("username");
-                              }else if(found[0].jugadorB==dbuser[i]._id){
-                                  found[0].jugadorB= dbuser[i].get("username");
-                              }else if(found[0].jugadorC==dbuser[i]._id){
-                                  found[0].jugadorC= dbuser[i].get("username");
-                              }else if(found[0].jugadorD==dbuser[i]._id){
-                                  found[0].jugadorD= dbuser[i].get("username");
-                              }
-                          }
                                 
                         res.render('index', {
                                       layout: true, 
@@ -45,7 +34,7 @@ app.get('/howto', function(req, res){
   res.render('howto', {layout: true, title: 'Howto AI Challenge - Bomberbot'});
 });
 app.get('/ranking', function(req, res){
-  models.User.find(function(err, users){
+  models.User.find({}).sort('totalPrueba',-1).execFind(function(err, users){
     console.log(users);
     res.render('ranking', 
       {layout:true, title: 'Ranking AI Challenge - Bomberbot',

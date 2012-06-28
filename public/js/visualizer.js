@@ -5,6 +5,8 @@ var size=45;
 var MOVF=30;
 var turno=0;
 var sizeBomb=50;
+var fin=false;
+var request=undefined;
 
 var xBombAnimationFrame=0;
 var contAnimation=0;
@@ -23,14 +25,41 @@ var crearRandomRobot = function(){
 
 
 //var mapaSource="XXXXXXXXXXX\nXA_BX\nX___X\nXLLLX\nX_3_X\nXC_DX\nXXXXX-XXXXX\nXA__X\nX__BX\nXLLLX\nX_2DX\nXC__X\nXXXXX-XXXXX\nX3_BX\nXA__X\nXLLLX\nX_1_X\nXC_DX\nXXXXX-XXXXX\nX2B_X\nXA__X\nXL#LX\nX###X\nXC#DX\nXXXXX-XXXXX\nX1B_X\nX_A_X\nXL_LX\nX___X\nX_CDX\nXXXXX-XXXXX\nX##BX\nX#A_X\nXL_LX\nX__DX\nXC__X\nXXXXX-XXXXX\nX__BX\nXA__X\nXL_LX\nX_D3X\nX3C_X\nXXXXX-XXXXX\nX__BX\nXA__X\nXL_LX\nX_D2X\nX2_CX\nXXXXX-XXXXX\nX__BX\nXA__X\nXLDLX\nX__1X\nX1_CX\nXXXXX-XXXXX\nX__BX\nXAD_X\nXL_#X\nX###X\nX###X\nXXXXX-XXXXXXXXXXX\nX__BX\nXAD_X\nXL__X\nX___X\nX___X\nXXXXX\nXXXXX\nXXXXX\nXXXXX\nXXXXXXXXXXX";
-var $a = $("#mapa");
-var mapaSource=$a.data("gio");
-mapaSource=mapaSource.replace(/,/g,"");
 
-console.log("mapa "+mapaSource)
+
+
 var ancho=0;
 var alto=0;
+var visualizerInstance=undefined;
 window.onload= function(){
+    console.log("paso1");
+    $(".pintemeEsta").click(function(){
+        fin=true;
+        turno=201;
+        cancelRequestAnimFrame(request);
+        delete request;
+        delete visualizerInstance;
+        console.log("entre!");
+        visualizar($(this).data("game"),
+            $(this).data("jugadora"),
+            $(this).data("jugadorb"),
+            $(this).data("jugadorc"),
+            $(this).data("jugadord"))();
+    });
+    console.log("paso2");
+    var $a = $("#mapa");
+    var mapaSource=$a.data("game");
+    visualizar(mapaSource,
+        $("#jugadorA").data("jugadora"),
+        $("#jugadorB").data("jugadorb"),
+        $("#jugadorC").data("jugadorc"),
+        $("#jugadorD").data("jugadord"))();
+}
+
+var visualizar= function(mapaSource, jugadora, jugadorb, jugadorc, jugadord){
+    turno=0;
+    fin=false;
+    mapaSource=mapaSource.replace(/,/g,"");
     var tablero = document.getElementById("tablero");
     var mapa =  "";
     
@@ -40,23 +69,23 @@ window.onload= function(){
         ctx = tablero.getContext('2d');
         ctx.font = '13px Calibri';
         var bloque = new Image();
-        bloque.src = "img/SolidoBloque50.png";
+        bloque.src = "/img/SolidoBloque50.png";
         var ladrillo = new Image();
-        ladrillo.src = "img/LadrilloBloque50.png";
+        ladrillo.src = "/img/LadrilloBloque50.png";
         var bomba = new Image();
-        bomba.src = "img/spritebomb.png";
+        bomba.src = "/img/spritebomb.png";
 
         var fuego = new Image();
-        fuego.src = "img/spritefuego.png";
+        fuego.src = "/img/spritefuego.png";
         var poderbomba = new Image();
-        poderbomba.src = "img/PoderBomba.png";
+        poderbomba.src = "/img/PoderBomba.png";
         var poderpow = new Image();
-        poderpow.src = "img/PoderFlama.png";
+        poderpow.src = "/img/PoderFlama.png";
         
-        var bot1 = new Bot($("#jugadorA").data("jugadora"),crearRandomRobot(),-1,-1);
-        var bot2 = new Bot($("#jugadorB").data("jugadorb"),crearRandomRobot(),-1,-1);
-        var bot3 = new Bot($("#jugadorC").data("jugadorc"),crearRandomRobot(),-1,-1);
-        var bot4 = new Bot($("#jugadorD").data("jugadord"),crearRandomRobot(),-1,-1);
+        var bot1 = new Bot(jugadora,crearRandomRobot(),-1,-1);
+        var bot2 = new Bot(jugadorb,crearRandomRobot(),-1,-1);
+        var bot3 = new Bot(jugadorc,crearRandomRobot(),-1,-1);
+        var bot4 = new Bot(jugadord,crearRandomRobot(),-1,-1);
     }
     
     var fondo = function(){
@@ -169,6 +198,14 @@ window.onload= function(){
         
     };
     
+    window.cancelRequestAnimFrame = ( function() {
+    return window.cancelAnimationFrame          ||
+        window.webkitCancelRequestAnimationFrame    ||
+        window.mozCancelRequestAnimationFrame       ||
+        window.oCancelRequestAnimationFrame     ||
+        window.msCancelRequestAnimationFrame        ||
+        clearTimeout
+    })();
     window.requestAnimFrame = (function(){
         return  window.requestAnimationFrame || 
         window.webkitRequestAnimationFrame || 
@@ -179,6 +216,7 @@ window.onload= function(){
             window.setTimeout(callback, 1000 / 60);
         };
     })();
+
     
     var leerMapa= function(){
         var i=0;
@@ -265,12 +303,10 @@ window.onload= function(){
         }
         
     };
-        
-    
-    var fin=false;
-    (function animloop(){
+
+    return (function animloop(){
         if(!fin){
-            requestAnimFrame(animloop);
+            request = requestAnimFrame(animloop);
             contAnimation++;
             if(contAnimation%10==0){
                 contAnimation=0;
@@ -281,7 +317,7 @@ window.onload= function(){
             }
         }
         if(cont%MOVF==0){
-            if(turno==mapaHistory.length){
+            if(turno>=mapaHistory.length){
                 fin=true;
             }else{
                 leerMapa();
@@ -290,8 +326,7 @@ window.onload= function(){
                 turno++;
             }
         }
-        moverBots();    
-        
-    })();
+        moverBots();
+    });
     
 };
