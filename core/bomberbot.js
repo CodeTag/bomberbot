@@ -244,7 +244,7 @@ exports.bomberbot=function bomberbot(app){
           partida.jugadores--;
         }else{
           if(partida.jugadores==1){
-            socket.addPuntos(WIN_POINTS);
+            player.addPuntos(WIN_POINTS);
             
             console.log(player.user+" "+player.ficha+" gano. total puntos: "+player.points);
             finalizoPartida=true;
