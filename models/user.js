@@ -15,6 +15,9 @@ module.exports = function(mongoose) {
     'email': { type: String, validate: [validatePresenceOf, 'an email is required'], index: { unique: true } },
     'username':{type: String, index:{unique:true}},
     'fullname':{type: String, index: false},
+    'totalPrueba':{type: Number, index: false, default:0},
+    'totalProduccion':{type: Number, index: false, default:0},
+    'partidasJugadas':{type: Number, index: false, default:0},
     'hashed_password': String,
     'salt': String,
     'connected': {type: Boolean, default: false}
