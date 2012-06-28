@@ -68,7 +68,7 @@ exports.bomberbot=function bomberbot(app){
     };
     socket.addPuntos=function addPuntos(points){
       socket.totalPrueba+=points;
-      app.models.User.update({_id:socket.token},{points:socket.totalPrueba},{},function(err){console.log(""+err);});
+      app.models.User.update({_id:socket.token},{totalPrueba:socket.totalPrueba},{},function(err){console.log(""+err);});
       //socket.totalProduccion+=points;
     };
 

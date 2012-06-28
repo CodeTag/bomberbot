@@ -34,7 +34,7 @@ app.get('/howto', function(req, res){
   res.render('howto', {layout: true, title: 'Howto AI Challenge - Bomberbot'});
 });
 app.get('/ranking', function(req, res){
-  models.User.find(function(err, users){
+  models.User.find({}).sort('totalPrueba',-1).execFind(function(err, users){
     console.log(users);
     res.render('ranking', 
       {layout:true, title: 'Ranking AI Challenge - Bomberbot',
