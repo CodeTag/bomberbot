@@ -274,6 +274,7 @@ exports.bomberbot=function bomberbot(app){
       finalizoPartida=true;
       console.timeEnd('duracion partida');
       console.log("puntuacion total: ");
+      
       partida.sort(function(a, b){return a.points-b.points});
       for(i in partida){
         console.log(partida[i].ficha+" "+ partida[i].user+" puntos: "+partida[i].points);
@@ -331,10 +332,13 @@ exports.bomberbot=function bomberbot(app){
       partida.lista=[];//ids de jugadores en esta partida
       partida.jugadores=4;
       partida.juego=[];
+      playersConnected.sort(function(){
+        return (Math.round(Math.random())-0.5); 
+      });
       playersConnected.sort(function(a, b){
         return a.partidasJugadas-b.partidasJugadas
       });
-      console.log("players connected "+playersConnected.length);
+      console.log("players connected "+playersConnected);
       for(var i =0; i<partida.jugadores;i++){
         partida[playersConnected[i].id]=playersConnected[i];
         partida.lista.push(playersConnected[i].id);
