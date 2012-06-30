@@ -1,7 +1,15 @@
 <h2>Listado de partidas para <%= username %></h2>
-<br/>
-<br/>
-
+<div class="alert alert-block">
+  <h4 class="alert-heading">¡ATENCI&Oacute;N!</h4>
+  <br/>
+  2PM a 6PM ronda clasificatoria
+  <br/>
+  7PM Gran final en el escenario de innovación y desarrollo
+</div>
+<div class="row-fluid">
+  <label class="control-label" for ="velocidad">velocidad</label>
+  <input id="velocidad" type="range"  min="2" max="48" value="20" onchange="cambiarVelocidad(50-this.value)"/>
+</div>
 <div class="row-fluid">
   <canvas id="tablero" width="750px" height="540px" style="background-color:#000;" style="float:left;">
     <p>what kind of "modern" browser are you using??</p>

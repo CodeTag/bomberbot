@@ -21,7 +21,8 @@
     <% users.forEach(function(user, index){ %>
     <tr>
       <td><%= index+1 %></td>
-      <td><a href=<%= '/users/games/'+user.get('username') %> ><%= user.get('username') %></a></td>
+      <td> <% if(user.get('connected')){ %><span class="badge badge-success" title="online">o</span><% } %><% if(!user.get('connected')){ %>   <span class="badge badge-important" title="offline">o</span><% } %>
+      <a href=<%= '/users/games/'+user.get('username') %> ><%= user.get('username') %></a></td>
       <td><%= user.get('totalPrueba') %></td>
       <td><%= user.get("partidasJugadas") %></td>
     </tr>

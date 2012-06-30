@@ -19,7 +19,7 @@ exports.bomberbot=function bomberbot(app){
   var controller = new models.gameController();
 
   //inicializar sockets
-  app.models.User.update({}, {connected:false},{ multi: true },function(err){console.log("error updating "+err)});
+  app.models.User.update({}, {connected:false, totalPrueba:0, partidasJugadas:0},{ multi: true },function(err){console.log("error updating "+err)});
 
   var asignarId = function(socket){
     
@@ -276,6 +276,10 @@ exports.bomberbot=function bomberbot(app){
       console.log("puntuacion total: ");
       
       partida.sort(function(a, b){return a.points-b.points});
+      var userA=undefined;
+      var userB=undefined;
+      var userC=undefined;
+      var userD=undefined;
       for(i in partida){
         console.log(partida[i].ficha+" "+ partida[i].user+" puntos: "+partida[i].points);
         if(i==0){
@@ -286,6 +290,15 @@ exports.bomberbot=function bomberbot(app){
           partida[i].addPuntos(partida[i].points+8);
         }else if(i==3){
           partida[i].addPuntos(partida[i].points+13);
+        }
+        if(partida[i].ficha=="A"){
+          userA = partida[i].user;
+        }else if(partida[i].ficha=="B"){
+          userB = partida[i].user;
+        }else if(partida[i].ficha=="C"){ 
+          userC = partida[i].user;
+        }else if(partida[i].ficha=="D"){
+          userD = partida[i].user;
         }
         partida[i].status=STATUS_WAITING;
       }
@@ -302,13 +315,13 @@ exports.bomberbot=function bomberbot(app){
         }
         //console.log("turno "+turno)
       }
-      //console.log("este fue el juego: "+partidaStr);
+      console.log("jugador A es"+userA);
 
       var partidaModel = new app.models.Partida({ logPartida: partidaStr.toString(),
-                                                  jugadorA:partida[0].user,
-                                                  jugadorB:partida[1].user,
-                                                  jugadorC:partida[2].user,
-                                                  jugadorD:partida[3].user});
+                                                  jugadorA:userA,
+                                                  jugadorB:userB,
+                                                  jugadorC:userC,
+                                                  jugadorD:userD});
       partidaModel.save(function(err){console.log("error saving putio "+err)});
       console.log("se guardo")
 
