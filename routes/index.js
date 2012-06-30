@@ -42,3 +42,8 @@ app.get('/ranking', function(req, res){
       });
   });
 });
+
+app.get('/Nosotros', function(req, res){
+      res.render('about', 
+      {layout:true, title: 'Nosotros - Ranking AI Challenge - Bomberbot'});
+});

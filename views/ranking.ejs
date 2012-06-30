@@ -18,7 +18,7 @@
     <% users.forEach(function(user, index){ %>
     <tr>
       <td><%= index+1 %></td>
-      <td><%= user.get('username') %></td>
+      <td><a href=<%= '/users/games/'+user.get('username') %> ><%= user.get('username') %></a></td>
       <td><%= user.get('totalPrueba') %></td>
       <td><%= user.get("partidasJugadas") %></td>
     </tr>

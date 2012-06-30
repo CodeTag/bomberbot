@@ -13,9 +13,25 @@ app.get('/users/profile', app.util.loadUser, function(req, res) {
   });
 });
 
+app.get('/users/games/:username', function(req, res){
+  models.Partida.find({$or:[{jugadorA:req.params.username},
+                         {jugadorB:req.params.username},
+                         {jugadorC:req.params.username},
+                         {jugadorD:req.params.username}]}).sort('fecha',-1).limit(10).execFind( function(err, listado){
+                          if(err){
+                            console.log("err "+err);
+                          }
+                          console.log("listado "+listado.length);
+                          res.render("users/games.ejs",{
+                            username: req.params.username,
+                            partidas: listado,
+                            layout:true, title:"AI Challenge - Bomberbot - Listado de partidas"
+                          });
+                          //res.send(listado);
+                     });
+});
+
 app.get('/users/games', app.util.loadUser, function(req, res){
-  console.log(req.currentUser);
-  console.log(req.currentUser.get("_id"));
   models.Partida.find({$or:[{jugadorA:req.currentUser.get("username")},
                          {jugadorB:req.currentUser.get("username")},
                          {jugadorC:req.currentUser.get("username")},
@@ -25,7 +41,7 @@ app.get('/users/games', app.util.loadUser, function(req, res){
                           }
                           console.log("listado "+listado.length);
                           res.render("users/games.ejs",{
-                            currentUser: req.currentUser,
+                            username: req.currentUser.get("username"),
                             partidas: listado,
                             layout:true, title:"AI Challenge - Bomberbot - Listado de partidas"
                           });
@@ -47,7 +63,7 @@ app.post('/users.:format?', function(req, res) {
 
   user.save(function(err) {
     if (err) {
-      console.log(err)
+      console.log(err);
       return userSaveFailed();
     } 
 
