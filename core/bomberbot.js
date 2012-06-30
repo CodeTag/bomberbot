@@ -19,7 +19,7 @@ exports.bomberbot=function bomberbot(app){
   var controller = new models.gameController();
 
   //inicializar sockets
-  app.models.User.update({}, {connected:false, totalPrueba:0, partidasJugadas:0},{ multi: true },function(err){console.log("error updating "+err)});
+  app.models.User.update({}, {connected:false},{ multi: true },function(err){console.log("error updating "+err)});
 
   var asignarId = function(socket){
     
