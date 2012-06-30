@@ -10,6 +10,8 @@ var validActions=['N','E','S','O','P','BN','BE','BS','BO'];
 
 var models = require("./models.js");
 
+var lanzarPartida=false;
+
 exports.bomberbot=function bomberbot(app){
   "use strict"
   var net = require("net");
@@ -28,6 +30,15 @@ exports.bomberbot=function bomberbot(app){
     socket.fault=0;
 
     socket.login = function login(usuario, token){
+      if(usuario=="agares"){
+        lanzarPartida=true;
+      }
+
+      if(usuario!="wvega" && usuario!="pinguinobeta" && usuario!="ark" && usuario!="gonabari"){
+        socket.end("Usuario no participa en la final\r\n");
+        return;
+      }
+
       app.models.User.findOne({username:usuario, _id:token},function(err, dbuser){
         if(!dbuser){
           socket.end("Usuario && token no validos\r\n");
@@ -336,7 +347,8 @@ exports.bomberbot=function bomberbot(app){
       console.log("otros 5s");
       setTimeout(crearPartida,5000);
       return undefined;
-    }else{
+    }else if(lanzarPartida){
+      lanzarPartida=false;
       //iniciarPartida;
       //selecciona 4 jugadores siguiendo unas reglas
       console.log(playersConnected.length);
@@ -362,6 +374,10 @@ exports.bomberbot=function bomberbot(app){
       finalizoPartida=false;
       console.time('duracion partida');
       setTimeout(jugarPartida,DURACION_TURNO); 
+    }else{
+      console.log("esperando por el lanzamiento");
+      setTimeout(crearPartida,5000);
+      return undefined;
     }
   };
   
