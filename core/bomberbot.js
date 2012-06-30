@@ -4,7 +4,7 @@ var STATUS_PLAYING="playing";
 var DURACION_TURNO=1000;
 var MAX_TURNOS=200;
 var WIN_POINTS=25;
-var FREEZE_TIME=7000;
+var FREEZE_TIME=2000;
 
 var validActions=['N','E','S','O','P','BN','BE','BS','BO'];
 
@@ -31,9 +31,11 @@ exports.bomberbot=function bomberbot(app){
       app.models.User.findOne({username:usuario, _id:token},function(err, dbuser){
         if(!dbuser){
           socket.end("Usuario && token no validos\r\n");
+          socket.destroy()
           return;
         }else if (dbuser.connected){
           socket.end("Usuario ya esta conectado.\r\n");
+          socket.destroy()
           return;
         }
         app.models.User.update({_id:token}, {connected:true},{},function(err){console.log("error updating "+err);});
@@ -49,6 +51,7 @@ exports.bomberbot=function bomberbot(app){
         socket.token= token;//validando 
         socket.status=STATUS_WAITING;
         socket.dbuser= dbuser;
+        socket.jugo=false;
         //cargar de la base de datos        
         socket.totalPrueba=dbuser.get("totalPrueba")||0;//puntos totales en pruebas
         socket.totalProduccion=dbuser.get("totalProduccion")||0;//puntos totales en produccion
@@ -116,15 +119,16 @@ exports.bomberbot=function bomberbot(app){
           //console.log(socket.user + " mientras waiting "+info[0]);
           if(info[0]=="salir"){
             socket.end("hasta luego mano");
+            socket.destroy();
           }
-          socket.pause();
-          setTimeout(socket.resume(),1000);
         break;
 
         case STATUS_PLAYING:
           socket.jugar(info[0].toUpperCase());
-          socket.pause();
-          controller.moverJugador(socket);
+          if(!socket.jugo){
+            socket.jugo=true;
+            controller.moverJugador(socket);  
+          }
         break;
 
         default:
@@ -132,6 +136,7 @@ exports.bomberbot=function bomberbot(app){
           socket.write("status no valido "+(++socket.fault)+"fallas \r\n");
           if(socket.fault==3){
             socket.end("ha completado tres fallas, se ha desconectado");
+            socket.destroy();
           }
         break;
       }
@@ -140,7 +145,7 @@ exports.bomberbot=function bomberbot(app){
     socket.on("end",function(){
       if(socket.status== STATUS_PLAYING){
         controller.eliminarJugador(socket);  
-        socket.addPuntos(-15);
+        socket.addPuntos(0);
       }
       if(partida.lista != undefined){
         var index= partida.lista.indexOf(socket.id);
@@ -155,12 +160,13 @@ exports.bomberbot=function bomberbot(app){
         playersConnected.splice(index,1);  
       }
       app.models.User.update({_id:socket.token}, {connected:false},{},function(err){console.log("error updating user "+err)});
-      socket.end("se ha desconectado por inactividad");
+      socket.end("desconectado");
+      socket.destroy();
     });
     socket.on("error",function(){
       if(socket.status== STATUS_PLAYING){
         controller.eliminarJugador(socket);  
-        socket.addPuntos(-15);
+        socket.addPuntos(0);
       }
       if(partida.lista != undefined){
         var index= partida.lista.indexOf(socket.id);
@@ -175,12 +181,13 @@ exports.bomberbot=function bomberbot(app){
         playersConnected.splice(index,1);  
       }
       app.models.User.update({_id:socket.token}, {connected:false},{},function(err){console.log("error updating user "+err)});
-      socket.end("se ha desconectado por inactividad");
+      socket.end("desconectado");
+      socket.destroy();
     });
     socket.on("close", function(){
       if(socket.status== STATUS_PLAYING){
         controller.eliminarJugador(socket);  
-        socket.addPuntos(-15);
+        socket.addPuntos(0);
       }
       if(partida.lista != undefined){
         var index= partida.lista.indexOf(socket.id);
@@ -195,12 +202,13 @@ exports.bomberbot=function bomberbot(app){
         playersConnected.splice(index,1);  
       }
       app.models.User.update({_id:socket.token}, {connected:false},{},function(err){console.log("error updating user "+err)});
-      socket.end("se ha desconectado por inactividad");
+      socket.end("desconectado");
+      socket.destroy();
     });
     socket.on("timeout",function(){
       if(socket.status== STATUS_PLAYING){
         controller.eliminarJugador(socket);  
-        socket.addPuntos(-15);
+        socket.addPuntos(0);
       }
       if(partida.lista != undefined){
         var index= partida.lista.indexOf(socket.id);
@@ -215,7 +223,8 @@ exports.bomberbot=function bomberbot(app){
         playersConnected.splice(index,1);  
       }
       app.models.User.update({_id:socket.token}, {connected:false},{},function(err){console.log("error updating user "+err)});
-      socket.end("se ha desconectado por inactividad");
+      socket.end("desconectado");
+      socket.destroy();
     });
   });
 
@@ -255,7 +264,7 @@ exports.bomberbot=function bomberbot(app){
           }
           player.accion=undefined;
           player.write("TURNO;"+turno+";"+map+";\r\n");
-          player.resume();
+          player.jugo=false;
         }
     }
     //guardar el estado de la partida

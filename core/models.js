@@ -3,8 +3,8 @@ var STATUS_WAITING="waiting";
 var STATUS_PLAYING="playing";
 var BLOCK_POINTS=1; //puntos por destruir un bloque
 var BOT_POINTS=10; //puntos por destruir un bot
-var DEATH_POINTS=-8; //puntos por destruir un bot
-var SUICIDE_POINTS =-30; //puntos por destruir un bot
+var DEATH_POINTS=0; //puntos por destruir un bot
+var SUICIDE_POINTS =0; //puntos por destruir un bot
 
 var POW_POWER_PROBABILITY=5;
 var BOMB_POWER_PROBABILITY=5;
@@ -185,6 +185,7 @@ exports.gameController= function(){
   };
 
   this.moverJugador= function(player){
+
     //no olvidar que no debe ser secuencial, sino todos al tiempo!
     //o el que primero se arrodilla primero se confiesa...
     var nextCell="";
