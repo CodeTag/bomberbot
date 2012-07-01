@@ -1,7 +1,7 @@
 ﻿var STATUS_UNKNOW="unknow";
 var STATUS_WAITING="waiting";
 var STATUS_PLAYING="playing";
-var DURACION_TURNO=100;
+var DURACION_TURNO=1000;
 var MAX_TURNOS=200;
 var WIN_POINTS=25;
 var FREEZE_TIME=2000;
