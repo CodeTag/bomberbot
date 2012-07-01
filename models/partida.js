@@ -16,6 +16,8 @@ module.exports = function(mongoose) {
     jugadorB: {type:String, index:false},
     jugadorC: {type:String, index:false},
     jugadorD: {type:String, index:false},
+    ganador: {type:String, index:false, default:""},
+    liga: {type:String, index:false, default:"clasificacionCampus"},
     logPartida: { type: String, index: false }
   });
   return mongoose.model(collection, Partida);

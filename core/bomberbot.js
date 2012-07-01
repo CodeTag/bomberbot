@@ -1,7 +1,7 @@
 ﻿var STATUS_UNKNOW="unknow";
 var STATUS_WAITING="waiting";
 var STATUS_PLAYING="playing";
-var DURACION_TURNO=1000;
+var DURACION_TURNO=100;
 var MAX_TURNOS=200;
 var WIN_POINTS=25;
 var FREEZE_TIME=2000;
@@ -35,6 +35,7 @@ exports.bomberbot=function bomberbot(app){
       }
 
       if(usuario!="wvega" && usuario!="pinguinobeta" && usuario!="ark" && usuario!="gonabari"){
+      //if(usuario!="ekeisco" && usuario!="woakas" && usuario!="app_config" && usuario!="kuryaki"){
         socket.end("Usuario no participa en la final\r\n");
         return;
       }
@@ -332,7 +333,10 @@ exports.bomberbot=function bomberbot(app){
                                                   jugadorA:userA,
                                                   jugadorB:userB,
                                                   jugadorC:userC,
-                                                  jugadorD:userD});
+                                                  jugadorD:userD,
+                                                  ganador:partida[3].user,
+                                                  liga:"finalCampus"
+                                                });
       partidaModel.save(function(err){console.log("error saving putio "+err)});
       console.log("se guardo")
 
