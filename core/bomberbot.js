@@ -72,14 +72,9 @@ exports.bomberbot=function bomberbot(app){
     };
     socket.addPuntos=function addPuntos(points){
       socket.totalPrueba+=points;
-      if(socket.user=="agares" || socket.user=="julianvargasalvarez" || socket.user == "woakas" ||socket.user=="kuryaki"){
-        console.log("a ustedes no los puedo salvar");
-      }else{
-        app.models.User.update({_id:socket.token},{totalPrueba:socket.totalPrueba},{},function(err){console.log(""+err);});
-      }
+      app.models.User.update({_id:socket.token},{totalPrueba:socket.totalPrueba},{},function(err){console.log(""+err);});
       //socket.totalProduccion+=points;
     };
-
   };
 
   var server = net.createServer( function(socket){
