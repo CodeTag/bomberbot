@@ -3,11 +3,13 @@ app.get('/', function(req, res){
 
   models.Partida.find({}).sort('fecha',-1).execFind(
     function (err, found) {
-      console.log("entro");
       if(err){
           console.log("error "+err);
       }
-        
+      if(found==0){
+        res.render('index',{layout:true,title: 'AI challenge - bomberbot by codetag.me', partidaCargada: undefined});
+        return;
+      }
 
       models.User.find({$or:[{_id:found[0].jugadorA},
                          {_id:found[0].jugadorB},

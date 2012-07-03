@@ -7,6 +7,8 @@
   <br/>
   7PM Gran final en el escenario de innovación y desarrollo
 </div>
+
+<% if(partidaCargada){ %> 
 <div class="row-fluid">
   <label class="control-label" for ="velocidad">velocidad</label>
   <input id="velocidad" type="range"  min="2" max="48" value="20" onchange="cambiarVelocidad(50-this.value)"/>
@@ -30,3 +32,4 @@
 </div>
 <%- scripts.push('bot.js') %>
 <%- scripts.push('visualizer.js') %>
+<% } %>

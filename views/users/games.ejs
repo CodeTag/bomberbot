@@ -6,33 +6,36 @@
   <br/>
   7PM Gran final en el escenario de innovación y desarrollo
 </div>
-<div class="row-fluid">
-  <label class="control-label" for ="velocidad">velocidad</label>
-  <input id="velocidad" type="range"  min="2" max="48" value="20" onchange="cambiarVelocidad(50-this.value)"/>
-</div>
-<div class="row-fluid">
-  <canvas id="tablero" width="750px" height="540px" style="background-color:#000;" style="float:left;">
-    <p>what kind of "modern" browser are you using??</p>
-  </canvas>
-</div>
-<div class="row-fluid">
-<p id="mapa" data-game='<%= partidas[0].get('logPartida') %>'>.</p>
-<p id="jugadorA" data-jugadora='<%= partidas[0].get("jugadorA") %>'></p>
-    <p id="jugadorB" data-jugadorb='<%= partidas[0].get("jugadorB") %>'></p>
-    <p id="jugadorC" data-jugadorc='<%= partidas[0].get("jugadorC") %>'></p>
-    <p id="jugadorD" data-jugadord='<%= partidas[0].get("jugadorD") %>'></p>
-<ul>
-<% partidas.forEach(function(partida){ %>
-    <li>
-      <a data-game="<%= partida.get('logPartida') %>" 
-      data-jugadora='<%= partida.get("jugadorA") %>'
-      data-jugadorb='<%= partida.get("jugadorB") %>'
-      data-jugadorc='<%= partida.get("jugadorC") %>'
-      data-jugadord='<%= partida.get("jugadorD") %>'
-      class="pintemeEsta" href="#"><%= partida.get('fecha') %></a>
-    </li>
-<% }) %>
-</ul>
-</div>
-<%- scripts.push('bot.js') %>
-<%- scripts.push('visualizer.js') %>
+
+<% if(partidas){ %>
+  <div class="row-fluid">
+    <label class="control-label" for ="velocidad">velocidad</label>
+    <input id="velocidad" type="range"  min="2" max="48" value="20" onchange="cambiarVelocidad(50-this.value)"/>
+  </div>
+  <div class="row-fluid">
+    <canvas id="tablero" width="750px" height="540px" style="background-color:#000;" style="float:left;">
+      <p>what kind of "modern" browser are you using??</p>
+    </canvas>
+  </div>
+  <div class="row-fluid">
+  <p id="mapa" data-game='<%= partidas[0].get('logPartida') %>'>.</p>
+  <p id="jugadorA" data-jugadora='<%= partidas[0].get("jugadorA") %>'></p>
+      <p id="jugadorB" data-jugadorb='<%= partidas[0].get("jugadorB") %>'></p>
+      <p id="jugadorC" data-jugadorc='<%= partidas[0].get("jugadorC") %>'></p>
+      <p id="jugadorD" data-jugadord='<%= partidas[0].get("jugadorD") %>'></p>
+  <ul>
+  <% partidas.forEach(function(partida){ %>
+      <li>
+        <a data-game="<%= partida.get('logPartida') %>" 
+        data-jugadora='<%= partida.get("jugadorA") %>'
+        data-jugadorb='<%= partida.get("jugadorB") %>'
+        data-jugadorc='<%= partida.get("jugadorC") %>'
+        data-jugadord='<%= partida.get("jugadorD") %>'
+        class="pintemeEsta" href="#"><%= partida.get('fecha') %></a>
+      </li>
+  <% }) %>
+  </ul>
+  </div>
+  <%- scripts.push('bot.js') %>
+  <%- scripts.push('visualizer.js') %>
+<% } %>

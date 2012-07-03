@@ -21,13 +21,14 @@ app.get('/users/games/:username', function(req, res){
                           if(err){
                             console.log("err "+err);
                           }
-                          console.log("listado "+listado.length);
+                          if(listado.length==0){
+                            listado=undefined;
+                          }
                           res.render("users/games.ejs",{
                             username: req.params.username,
                             partidas: listado,
                             layout:true, title:"AI Challenge - Bomberbot - Listado de partidas"
                           });
-                          //res.send(listado);
                      });
 });
 
@@ -39,13 +40,14 @@ app.get('/users/games', app.util.loadUser, function(req, res){
                           if(err){
                             console.log("err "+err);
                           }
-                          console.log("listado "+listado.length);
+                          if(listado.length==0){
+                            listado=undefined;
+                          }
                           res.render("users/games.ejs",{
                             username: req.currentUser.get("username"),
                             partidas: listado,
                             layout:true, title:"AI Challenge - Bomberbot - Listado de partidas"
                           });
-                          //res.send(listado);
                      });
 });
 
