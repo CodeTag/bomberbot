@@ -164,14 +164,21 @@ exports.gameController= function(){
         console.log("D "+player.xIndex+" "+player.yIndex)
       break;
     }
-    if(cont==4){
-      console.log(mapa.map);
-      for(var i=0; i<players.length;i++){
-        players[i].status=STATUS_PLAYING;
-        players[i].partidasJugadas++;
-        console.log(players[i].user+" juegos: "+players[i].partidasJugadas);
-        players[i].write("EMPEZO;"+mapa.map.join("\n")+";"+players[i].ficha+";\r\n");
-      }  
+  };
+
+  this.iniciarPartida=function(){
+    console.log(mapa.map);
+    for(var i=0; i<players.length;i++){
+      players[i].status=STATUS_PLAYING;
+      players[i].partidasJugadas++;
+      console.log(players[i].user+" juegos: "+players[i].partidasJugadas);
+      players[i].write("EMPEZO;"+mapa.map.join("\n")+";"+players[i].ficha+";\r\n");
+    } 
+    if(players.length<4){
+      mapa.map[mapa.dy][mapa.dx]="_";
+      if(players.length<3){
+        mapa.map[mapa.cy][mapa.cx]="_";
+      }
     }
   };
 

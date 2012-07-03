@@ -273,7 +273,7 @@ exports.bomberbot=function bomberbot(app){
       console.timeEnd('duracion partida');
       console.log("puntuacion total: ");
       
-      partida.sort(function(a, b){return a.points-b.points});
+      partida.sort(function(a, b){return b.points-a.points});
       var userA=undefined;
       var userB=undefined;
       var userC=undefined;
@@ -281,13 +281,13 @@ exports.bomberbot=function bomberbot(app){
       for(i in partida){
         console.log(partida[i].ficha+" "+ partida[i].user+" puntos: "+partida[i].points);
         if(i==0){
-          partida[i].addPuntos(partida[i].points);
-        }else if(i==1){
-          partida[i].addPuntos(partida[i].points+5);
-        }else if(i==2){
-          partida[i].addPuntos(partida[i].points+8);
-        }else if(i==3){
           partida[i].addPuntos(partida[i].points+13);
+        }else if(i==1){
+          partida[i].addPuntos(partida[i].points+8);
+        }else if(i==2){
+          partida[i].addPuntos(partida[i].points+5);
+        }else if(i==3){
+          partida[i].addPuntos(partida[i].points);
         }
         if(partida[i].ficha=="A"){
           userA = partida[i].user;
@@ -318,7 +318,7 @@ exports.bomberbot=function bomberbot(app){
                                                   jugadorB:userB,
                                                   jugadorC:userC,
                                                   jugadorD:userD,
-                                                  ganador:partida[3].user,
+                                                  ganador:partida[0].user,
                                                   liga:"libreJulio"
                                                 });
       partidaModel.save(function(err){console.log("error saving putio "+err)});
@@ -343,9 +343,9 @@ exports.bomberbot=function bomberbot(app){
       partida = [];//almacena los jugadores asociandolos por el id
       partida.lista=[];//ids de jugadores en esta partida
       if(playersConnected.length>=4){
-        partida.jugadores= playersConnected.length;
+        partida.jugadores=4;
       }else{
-        partida.jugadores=4;  
+        partida.jugadores= playersConnected.length;
       }
       partida.juego=[];
       playersConnected.sort(function(){
@@ -361,6 +361,7 @@ exports.bomberbot=function bomberbot(app){
         controller.addPlayer(playersConnected[i]);
         app.models.User.update({_id:playersConnected[i].token},{partidasJugadas:playersConnected[i].partidasJugadas+1},{},function(err){console.log(""+err);});
       }
+      controller.iniciarPartida();
       turno=0;
       finalizoPartida=false;
       console.time('duracion partida');
