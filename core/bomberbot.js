@@ -161,14 +161,9 @@ exports.bomberbot=function bomberbot(app){
       if(index!=-1){
         playersConnected.splice(index,1);  
       }
-<<<<<<< Updated upstream
-      app.models.User.update({_id:socket.token}, {connected:false},{},function(err){console.log("error updating user "+err)});
-      socket.end("desconectado");
-      socket.destroy();
-=======
       app.models.User.update({_id:socket.token}, {connected:false},{},function(err){console.log(Date()+" "+"error updating user "+err)});
       socket.end("se ha desconectado por inactividad");
->>>>>>> Stashed changes
+      socket.destroy();
     });
     socket.on("error",function(){
       if(socket.status== STATUS_PLAYING){
@@ -187,14 +182,9 @@ exports.bomberbot=function bomberbot(app){
       if(index!=-1){
         playersConnected.splice(index,1);  
       }
-<<<<<<< Updated upstream
-      app.models.User.update({_id:socket.token}, {connected:false},{},function(err){console.log("error updating user "+err)});
-      socket.end("desconectado");
-      socket.destroy();
-=======
       app.models.User.update({_id:socket.token}, {connected:false},{},function(err){console.log(Date()+" "+"error updating user "+err)});
       socket.end("se ha desconectado por inactividad");
->>>>>>> Stashed changes
+      socket.destroy();
     });
     socket.on("close", function(){
       if(socket.status== STATUS_PLAYING){
@@ -213,14 +203,9 @@ exports.bomberbot=function bomberbot(app){
       if(index!=-1){
         playersConnected.splice(index,1);  
       }
-<<<<<<< Updated upstream
-      app.models.User.update({_id:socket.token}, {connected:false},{},function(err){console.log("error updating user "+err)});
-      socket.end("desconectado");
-      socket.destroy();
-=======
       app.models.User.update({_id:socket.token}, {connected:false},{},function(err){console.log(Date()+" "+"error updating user "+err)});
       socket.end("se ha desconectado por inactividad");
->>>>>>> Stashed changes
+      socket.destroy();
     });
     socket.on("timeout",function(){
       if(socket.status== STATUS_PLAYING){
@@ -239,14 +224,9 @@ exports.bomberbot=function bomberbot(app){
       if(index!=-1){
         playersConnected.splice(index,1);  
       }
-<<<<<<< Updated upstream
-      app.models.User.update({_id:socket.token}, {connected:false},{},function(err){console.log("error updating user "+err)});
-      socket.end("desconectado");
-      socket.destroy();
-=======
       app.models.User.update({_id:socket.token}, {connected:false},{},function(err){console.log(Date()+" "+"error updating user "+err)});
       socket.end("se ha desconectado por inactividad");
->>>>>>> Stashed changes
+      socket.destroy();
     });
   });
 
@@ -261,14 +241,9 @@ exports.bomberbot=function bomberbot(app){
     }
     //algun procesamiento
     controller.actualizarMapa();
-<<<<<<< Updated upstream
-    var map= controller.getMapa();
-=======
     console.log(Date()+" "+"Turno: --"+turno+"--");
     var map= controller.getMapa();
     console.log(Date()+"\n "+map);
-    //console.log(Date()+" "+"----");
->>>>>>> Stashed changes
     for(var i=partida.jugadores-1; i>=0;i--){
         var player = partida[partida.lista[i]];
         if(player.status==STATUS_WAITING){
@@ -293,18 +268,13 @@ exports.bomberbot=function bomberbot(app){
     if(turno>=MAX_TURNOS||finalizoPartida){
       finalizoPartida=true;
       console.timeEnd('duracion partida');
-<<<<<<< Updated upstream
-      console.log("puntuacion total: ");
       
-      partida.sort(function(a, b){return b.points-a.points});
       var userA=undefined;
       var userB=undefined;
       var userC=undefined;
       var userD=undefined;
-=======
       console.log(Date()+" "+"puntuacion total: ");
       partida.sort(function(a, b){return a.points-b.points});
->>>>>>> Stashed changes
       for(i in partida){
         console.log(Date()+" "+partida[i].ficha+" "+ partida[i].user+" puntos: "+partida[i].points);
         if(i==0){
@@ -327,13 +297,6 @@ exports.bomberbot=function bomberbot(app){
         }
         partida[i].status=STATUS_WAITING;
       }
-<<<<<<< Updated upstream
-
-=======
-      //console.log(Date()+" "+"alllll");
-      //guardar log de partida 
-      
->>>>>>> Stashed changes
       var partidaStr="";
       var logFila="";
       var partidaTurno;
@@ -344,21 +307,6 @@ exports.bomberbot=function bomberbot(app){
         }
         //console.log(Date()+" "+"turno "+turno)
       }
-<<<<<<< Updated upstream
-      console.log("jugador A es"+userA);
-
-      var partidaModel = new app.models.Partida({ logPartida: partidaStr.toString(),
-                                                  jugadorA:userA,
-                                                  jugadorB:userB,
-                                                  jugadorC:userC,
-                                                  jugadorD:userD,
-                                                  ganador:partida[0].user,
-                                                  liga:"libreJulio"
-                                                });
-      partidaModel.save(function(err){console.log("error saving putio "+err)});
-      console.log("se guardo")
-=======
-      //console.log(Date()+" "+"este fue el juego: "+partidaStr);
 
       var partidaModel = new app.models.Partida({ logPartida: partidaStr.toString(),
                                                   jugadorA:partida[0].user,
@@ -367,7 +315,6 @@ exports.bomberbot=function bomberbot(app){
                                                   jugadorD:partida[3].user});
       partidaModel.save(function(err){console.log(Date()+" "+"error saving putio "+err)});
       console.log(Date()+" "+"se guardo")
->>>>>>> Stashed changes
 
       setTimeout(crearPartida,FREEZE_TIME);
     }else{
@@ -376,13 +323,8 @@ exports.bomberbot=function bomberbot(app){
   };
 
   var crearPartida = function(){
-<<<<<<< Updated upstream
-    if(playersConnected.length<2){
-      console.log("esperando para lanzar una partida");
-=======
     if(playersConnected.length<4){
       console.log(Date()+" "+"otros 5s");
->>>>>>> Stashed changes
       setTimeout(crearPartida,5000);
       return undefined;
     }else{
@@ -404,11 +346,7 @@ exports.bomberbot=function bomberbot(app){
       playersConnected.sort(function(a, b){
         return a.partidasJugadas-b.partidasJugadas
       });
-<<<<<<< Updated upstream
-      console.log("players connected "+playersConnected);
-=======
       console.log(Date()+" "+"players connected "+playersConnected.length);
->>>>>>> Stashed changes
       for(var i =0; i<partida.jugadores;i++){
         partida[playersConnected[i].id]=playersConnected[i];
         partida.lista.push(playersConnected[i].id);
