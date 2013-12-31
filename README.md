@@ -1,7 +1,7 @@
 bomberbot
 =========
 
-www.bomberbot.com
+http://www.youtube.com/watch?v=mm_qTfzX78k
 
 IA Challenge para Campus Party powered by codetag.me
 
